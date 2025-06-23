@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+class PerubahanJadwalSementara extends Model
+{
+    /** @use HasFactory<\Database\Factories\PerubahanJadwalSementaraFactory> */
+    use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $guarded = [];
+
+    public function jadwalSementara(): BelongsTo
+    {
+        return $this->belongsTo(JadwalSementara::class, 'jadwal_sementara_id');
+    }
+
+    public function ruangKelas(): BelongsTo
+    {
+        return $this->belongsTo(RuangKelas::class, 'ruang_kelas_id');
+    }
+}
