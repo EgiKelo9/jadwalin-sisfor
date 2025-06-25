@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -23,6 +24,21 @@ class DosenFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'telepon' => fake()->phoneNumber(),
             'alamat' => fake()->address(),
+            'status' => 'aktif',
         ];
+    }
+
+    public function withAccount($count = 1)
+    {
+        return $this->afterCreating(function ($dosen) use ($count) {
+            if ($dosen->status === 'aktif') {
+                $user = User::factory($count)->create([
+                    'email' => $dosen->email,
+                    'role' => 'dosen',
+                    'dosen_id' => $dosen->id,
+                ]);
+                $dosen->user()->saveMany($user);
+            }
+        });
     }
 }

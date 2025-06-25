@@ -7,12 +7,15 @@ import { Link } from '@inertiajs/react';
 import { BookMarked, CalendarCheck2, DoorOpen, GraduationCap, House, ScrollText, Settings, User } from 'lucide-react';
 import AppLogo from './app-logo';
 
-const mainNavItems: NavItem[] = [
+const berandaNavItems: NavItem[] = [
     {
         title: 'Beranda',
         href: '/beranda',
         icon: House,
     },
+];
+
+const jadwalNavItems: NavItem[] = [
     {
         title: 'Jadwal Perkuliahan',
         href: '/jadwal-perkuliahan',
@@ -23,6 +26,9 @@ const mainNavItems: NavItem[] = [
         href: '/peminjaman-kelas',
         icon: BookMarked,
     },
+];
+
+const sumberDayaNavItems: NavItem[] = [
     {
         title: 'Mata Kuliah',
         href: '/mata-kuliah',
@@ -33,6 +39,9 @@ const mainNavItems: NavItem[] = [
         href: '/ruang-kelas',
         icon: DoorOpen,
     },
+];
+
+const penggunaNavItems: NavItem[] = [
     {
         title: 'Data Dosen',
         href: '/data-dosen',
@@ -69,7 +78,19 @@ export function AppSidebar({ userRole }: { userRole?: string }) {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems.map(item => ({
+                <NavMain items={berandaNavItems.map(item => ({
+                    ...item,
+                    href: `/${userRole}${item.href}`,
+                }))} />
+                <NavMain title="Jadwal" items={jadwalNavItems.map(item => ({
+                    ...item,
+                    href: `/${userRole}${item.href}`,
+                }))} />
+                <NavMain title="Sumber Daya" items={sumberDayaNavItems.map(item => ({
+                    ...item,
+                    href: `/${userRole}${item.href}`,
+                }))} />
+                <NavMain title="Pengguna" items={penggunaNavItems.map(item => ({
                     ...item,
                     href: `/${userRole}${item.href}`,
                 }))} />

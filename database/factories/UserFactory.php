@@ -59,17 +59,28 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        // Randomly choose one role type
-        $role = fake()->randomElement(['mahasiswa', 'dosen', 'admin']);
-        $data = $this->getData($role);
+        // // Randomly choose one role type
+        // $role = fake()->randomElement(['mahasiswa', 'dosen', 'admin']);
+        // $data = $this->getData($role);
+
+        // return [
+        //     'email' => $data['email'],
+        //     'role' => $role,
+        //     'email_verified_at' => now(),
+        //     'mahasiswa_id' => $role === 'mahasiswa' ? $data['id'] : null,
+        //     'dosen_id' => $role === 'dosen' ? $data['id'] : null,
+        //     'admin_id' => $role === 'admin' ? $data['id'] : null,
+        //     'password' => static::$password ??= Hash::make('password'),
+        //     'remember_token' => Str::random(10),
+        // ];
 
         return [
-            'email' => $data['email'],
-            'role' => $role,
+            'email' => fake()->unique()->safeEmail(),
+            'role' => fake()->randomElement($this->roles),
             'email_verified_at' => now(),
-            'mahasiswa_id' => $role === 'mahasiswa' ? $data['id'] : null,
-            'dosen_id' => $role === 'dosen' ? $data['id'] : null,
-            'admin_id' => $role === 'admin' ? $data['id'] : null,
+            'mahasiswa_id' => null,
+            'dosen_id' => null,
+            'admin_id' => null,
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ];
