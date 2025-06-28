@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RuangKelasController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -25,6 +26,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Admin routes
     Route::get('admin/beranda', [DashboardController::class, 'admin'])->name('dashboard.admin');
 
+    //Ruang kelas route
+    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('ruang-kelas', RuangKelasController::class);
+});
 });
 
 require __DIR__.'/settings.php';
