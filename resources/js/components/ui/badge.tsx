@@ -13,6 +13,8 @@ const badgeVariants = cva(
           "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
         primary:
           "border-transparent bg-[#13686D] text-primary-foreground dark:text-foreground [a&]:hover:bg-[#13686D]/90",
+        warning:
+          "border-transparent bg-[#F78C00] text-primary-foreground dark:text-foreground [a&]:hover:bg-[#F78C00]/90",
         secondary:
           "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
         destructive:

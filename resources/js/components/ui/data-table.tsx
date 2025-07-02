@@ -85,12 +85,12 @@ interface DataTableProps<TData extends { id: string | number }, TValue> {
 }
 
 // Component for individual column filter
-function ColumnFilter<TData>({ 
-  column, 
-  config 
-}: { 
+function ColumnFilter<TData>({
+  column,
+  config
+}: {
   column: Column<TData, unknown>
-  config: ColumnFilterConfig 
+  config: ColumnFilterConfig
 }) {
   const [selectedValues, setSelectedValues] = React.useState<string[]>([])
 
@@ -99,7 +99,7 @@ function ColumnFilter<TData>({
     if (config.options) {
       return config.options
     }
-    
+
     // Extract unique values from column data
     const values = column.getFacetedUniqueValues()
     return Array.from(values.keys()).filter(Boolean).sort()
@@ -108,7 +108,7 @@ function ColumnFilter<TData>({
   // Handle filter changes based on filter type
   const handleFilterChange = (values: string[]) => {
     setSelectedValues(values)
-    
+
     if (values.length === 0) {
       column.setFilterValue(undefined)
     } else {
@@ -159,7 +159,7 @@ function ColumnFilter<TData>({
             <SelectItem value="all">Semua</SelectItem>
             {uniqueValues.map((value) => (
               <SelectItem key={value} value={String(value)} className="capitalize">
-                {String(value)}
+                {String(value).replace('_', ' ')}
               </SelectItem>
             ))}
           </SelectContent>
@@ -184,7 +184,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFiltersState, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  
+
   // Define custom filter functions
   const exactMatch: FilterFn<TData> = (row, columnId, filterValue) => {
     const value = row.getValue(columnId)
@@ -200,7 +200,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
     const value = String(row.getValue(columnId) || '')
     return value.toLowerCase().includes(String(filterValue).toLowerCase())
   }
-  
+
   const table = useReactTable({
     data,
     columns,
@@ -214,7 +214,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
     getFacetedUniqueValues: (table, columnId) => () => {
       const column = table.getColumn(columnId)
       if (!column) return new Map()
-      
+
       const uniqueValues = new Map()
       table.getPreFilteredRowModel().flatRows.forEach((row) => {
         const value = row.getValue(columnId)
@@ -268,13 +268,17 @@ export function DataTable<TData extends { id: string | number }, TValue>({
               <DropdownMenuContent align="end" className="w-[200px]">
                 <DropdownMenuLabel>Filter Data</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {columnFilters.map((config) => {
-                  const column = table.getColumn(config.columnId)
-                  if (!column) return null
-                  return (
-                    <ColumnFilter key={config.columnId} column={column} config={config} />
-                  )
-                })}
+                <div className="flex flex-col gap-1">
+                  {columnFilters.map((config) => {
+                    const column = table.getColumn(config.columnId)
+                    if (!column) return null
+                    return (
+                      <div className="flex flex-col gap-1" key={config.columnId}>
+                        <ColumnFilter column={column} config={config} />
+                      </div>
+                    )
+                  })}
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
@@ -365,7 +369,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
                       const config = columnFilters.find(c => c.columnId === filter.id)
                       const column = table.getColumn(filter.id)
                       if (!config || !column) return null
-                      
+
                       return (
                         <Button
                           key={filter.id}
@@ -375,7 +379,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
                           onClick={() => column.setFilterValue(undefined)}
                         >
                           {config.label}: {
-                            Array.isArray(filter.value) 
+                            Array.isArray(filter.value)
                               ? `${filter.value.length} dipilih`
                               : String(filter.value)
                           }
@@ -388,7 +392,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
               </TableRow>
             </TableHeader>
           )}
-          
+
           <TableHeader>
             {/* table header */}
             {table.getRowModel().rows?.length ? (

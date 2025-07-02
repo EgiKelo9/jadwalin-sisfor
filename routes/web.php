@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\MahasiswaController as AdminMahasiswaController;
+use App\Http\Controllers\Admin\DosenController as AdminDosenController;
+use App\Http\Controllers\Admin\RuangKelasController as AdminRuangKelasController;
+use App\Http\Controllers\Admin\MataKuliahController as AdminMataKuliahController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,6 +28,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('data-mahasiswa', AdminMahasiswaController::class);
         Route::put('data-mahasiswa/{data_mahasiswa}/status', [AdminMahasiswaController::class, 'updateStatus'])->name('data-mahasiswa.updateStatus');
+        Route::resource('data-dosen', AdminDosenController::class);
+        Route::put('data-dosen/{data_dosen}/status', [AdminDosenController::class, 'updateStatus'])->name('data-dosen.updateStatus');
+        Route::resource('ruang-kelas', AdminRuangKelasController::class);
+        Route::resource('mata-kuliah', AdminMataKuliahController::class);
+        Route::put('mata-kuliah/{mata_kuliah}/status', [AdminMataKuliahController::class, 'updateStatus'])->name('mata-kuliah.updateStatus');
     });
 
 });

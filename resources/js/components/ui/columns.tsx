@@ -48,6 +48,8 @@ export interface DataColumnConfig {
   key: string
   header: string
   sortable?: boolean
+  prefix?: string
+  suffix?: string
   type: "text" | "date" | "time" | "image" | "currency" | "badge" | "list"
   onClick?: (item: any) => any
 }
@@ -159,9 +161,11 @@ export function createTableColumns<T extends BaseEntity>(
         switch (columnConfig.type) {
           case "text":
             return (
-              <span className="truncate max-w-96">
+                <span className="truncate max-w-96">
+                {columnConfig.prefix && <span>{columnConfig.prefix}</span>}
                 {value}
-              </span>
+                {columnConfig.suffix && <span>{columnConfig.suffix}</span>}
+                </span>
             );
           case "date":
             return (
@@ -208,15 +212,15 @@ export function createTableColumns<T extends BaseEntity>(
             return (
               <Badge
                 variant={
-                  ["tersedia", "aktif", "selesai", "success"].includes(status?.toLowerCase())
+                  ["tersedia", "aktif", "selesai", "success", "layak"].includes(status?.toLowerCase())
                     ? "primary"
-                    : ["tidak tersedia", "nonaktif", "batal", "gagal", "error"].includes(status?.toLowerCase())
+                    : ["tidak tersedia", "nonaktif", "batal", "gagal", "error", "tidak_layak"].includes(status?.toLowerCase())
                       ? "destructive"
-                      : "secondary"
+                      : "warning"
                 }
                 className="capitalize"
               >
-                {status}
+                {status.replace('_', ' ')}
               </Badge>
             );
           case "list":
@@ -414,7 +418,7 @@ export function createTableColumns<T extends BaseEntity>(
                       {actionConfig.switchLabel || 'Status'}
                     </DropdownMenuItem>
                   )}
-                  <DropdownMenuSeparator />
+                  {actionConfig.showSwitch && <DropdownMenuSeparator />}
                   {actionConfig.showEdit !== false && (
                     <DropdownMenuItem onClick={handleEdit}>
                       <Pencil className="h-4 w-4 mr-1" />

@@ -182,7 +182,7 @@ export default function UbahMahasiswa({ mahasiswa }: { mahasiswa: MahasiswaForm 
                                 value={data.nama}
                                 onChange={(e) => setData('nama', e.target.value)}
                                 disabled={processing}
-                                placeholder='Masukkan Nama Mahasiwa'
+                                placeholder='Masukkan Nama Mahasiswa'
                                 className="w-full"
                             />
                             <InputError message={errors.nama} />
@@ -205,7 +205,7 @@ export default function UbahMahasiswa({ mahasiswa }: { mahasiswa: MahasiswaForm 
                             />
                             <InputError message={errors.email} />
                         </div>
-                        <div className='grid grid-cols-2 gap-4 mt-2 col-span-2'>
+                        <div className='grid grid-cols-2 items-start gap-4 mt-2 col-span-2'>
                             <div className='grid gap-4'>
                                 <Label htmlFor='nim'>NIM
                                     <span className='text-red-500'>*</span>

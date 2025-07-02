@@ -25,17 +25,18 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/admin/beranda',
     },
     {
-        title: 'Mahasiswa',
-        href: '/admin/data-mahasiswa',
+        title: 'Dosen',
+        href: '/admin/data-dosen',
     },
     {
         title: 'Buat',
-        href: '/admin/data-mahasiswa/{id}',
+        href: '/admin/data-dosen/{id}',
     },
 ];
 
-type MahasiswaForm = {
-    nim: string;
+type DosenForm = {
+    nip: string;
+    nidn: string;
     nama: string;
     email: string;
     telepon: string | number;
@@ -45,9 +46,10 @@ type MahasiswaForm = {
     _method?: string;
 };
 
-export default function BuatMahasiswa() {
-    const { data, setData, post, processing, errors, reset, cancel } = useForm<Required<MahasiswaForm>>({
-        nim: '',
+export default function BuatDosen() {
+    const { data, setData, post, processing, errors, reset, cancel } = useForm<Required<DosenForm>>({
+        nip: '',
+        nidn: '',
         nama: '',
         email: '',
         telepon: '',
@@ -74,7 +76,7 @@ export default function BuatMahasiswa() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('admin.data-mahasiswa.store'), {
+        post(route('admin.data-dosen.store'), {
             forceFormData: true,
             onSuccess: () => {
                 reset();
@@ -87,10 +89,10 @@ export default function BuatMahasiswa() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs} userRole='admin'>
-            <Head title="Buat Mahasiswa" />
+            <Head title="Buat Dosen" />
             <ToasterComponent />
             <form className="flex h-full w-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto" onSubmit={submit}>
-                <h1 className='text-xl py-2 font-semibold'>Buat Mahasiswa</h1>
+                <h1 className='text-xl py-2 font-semibold'>Buat Dosen</h1>
                 <div className='grid grid-cols-2 sm:grid-cols-4 md:grid-cols-2 lg:grid-cols-4 items-start gap-4 w-full'>
                     <div className='grid items-center col-span-2 gap-4'>
                         <div className='grid gap-4 mt-2 col-span-2'>
@@ -106,7 +108,7 @@ export default function BuatMahasiswa() {
                                 value={data.nama}
                                 onChange={(e) => setData('nama', e.target.value)}
                                 disabled={processing}
-                                placeholder='Masukkan Nama Mahasiswa'
+                                placeholder='Masukkan Nama Dosen'
                                 className="w-full"
                             />
                             <InputError message={errors.nama} />
@@ -124,50 +126,47 @@ export default function BuatMahasiswa() {
                                 value={data.email}
                                 onChange={(e) => setData('email', e.target.value)}
                                 disabled={processing}
-                                placeholder='Masukkan Email Mahasiswa'
+                                placeholder='Masukkan Email Dosen'
                                 className="w-full"
                             />
                             <InputError message={errors.email} />
                         </div>
                         <div className='grid grid-cols-2 gap-4 mt-2 col-span-2'>
                             <div className='grid gap-4'>
-                                <Label htmlFor='nim'>NIM
+                                <Label htmlFor='nip'>NIP
                                     <span className='text-red-500'>*</span>
                                 </Label>
                                 <Input
-                                    id='nim'
+                                    id='nip'
                                     type='text'
                                     required
                                     autoFocus
                                     tabIndex={3}
-                                    value={data.nim}
-                                    onChange={(e) => setData('nim', e.target.value)}
+                                    value={data.nip}
+                                    onChange={(e) => setData('nip', e.target.value)}
                                     disabled={processing}
-                                    placeholder='Masukkan NIM Mahasiswa'
+                                    placeholder='Masukkan NIP Dosen'
                                     className="w-full"
                                 />
-                                <InputError message={errors.nim} />
+                                <InputError message={errors.nip} />
                             </div>
                             <div className='grid gap-4'>
-                                <Label htmlFor='status'>Status
+                                <Label htmlFor='nidn'>NIDN
                                     <span className='text-red-500'>*</span>
                                 </Label>
-                                <Select value={String(data.status)} onValueChange={(value) => setData('status', value as 'aktif' | 'nonaktif')}>
-                                    <SelectTrigger
-                                        id='status'
-                                        autoFocus
-                                        tabIndex={4}
-                                        disabled={processing}
-                                        className="w-full"
-                                    >
-                                        <SelectValue placeholder={String(data.status)} defaultValue={data.status} />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="aktif">Aktif</SelectItem>
-                                        <SelectItem value="nonaktif">Nonaktif</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <InputError message={errors.status} />
+                                <Input
+                                    id='nidn'
+                                    type='text'
+                                    required
+                                    autoFocus
+                                    tabIndex={4}
+                                    value={data.nidn}
+                                    onChange={(e) => setData('nidn', e.target.value)}
+                                    disabled={processing}
+                                    placeholder='Masukkan NIDN Dosen'
+                                    className="w-full"
+                                />
+                                <InputError message={errors.nip} />
                             </div>
                         </div>
                         <div className='grid gap-4 mt-2 col-span-2'>
@@ -183,7 +182,7 @@ export default function BuatMahasiswa() {
                                 value={data.telepon}
                                 onChange={(e) => setData('telepon', e.target.value)}
                                 disabled={processing}
-                                placeholder='Masukkan Nomor Telepon Mahasiswa'
+                                placeholder='Masukkan Nomor Telepon Dosen'
                                 className="w-full"
                             />
                             <InputError message={errors.telepon} />
@@ -198,7 +197,7 @@ export default function BuatMahasiswa() {
                                 value={data.alamat}
                                 onChange={(e) => setData('alamat', e.target.value)}
                                 disabled={processing}
-                                placeholder='Masukkan Alamat Mahasiswa'
+                                placeholder='Masukkan Alamat Dosen'
                                 className="w-full"
                             />
                             <InputError message={errors.alamat} />

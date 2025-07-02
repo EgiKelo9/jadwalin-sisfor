@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nip', 20)->unique();
             $table->string('nama');
             $table->string('email')->unique();
-            $table->string('telepon', 15);
+            $table->string('telepon', 15)->unique();
             $table->text('alamat');
             $table->string('foto')->nullable();
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
