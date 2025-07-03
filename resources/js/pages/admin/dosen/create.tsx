@@ -30,7 +30,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: 'Buat',
-        href: '/admin/data-dosen/{id}',
+        href: '/admin/data-dosen/buat',
     },
 ];
 

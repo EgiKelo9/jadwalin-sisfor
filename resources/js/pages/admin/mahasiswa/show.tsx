@@ -113,6 +113,7 @@ export default function LihatMahasiswa({ mahasiswa }: { mahasiswa: MahasiswaData
                             <Label htmlFor='alamat'>Alamat</Label>
                             <Textarea
                                 id='alamat'
+                                tabIndex={6}
                                 disabled
                                 value={mahasiswa.alamat}
                                 className="w-full"
@@ -125,7 +126,7 @@ export default function LihatMahasiswa({ mahasiswa }: { mahasiswa: MahasiswaData
                             <Input
                                 id='nama'
                                 type='text'
-                                tabIndex={1}
+                                tabIndex={6}
                                 value={mahasiswa.foto ?? "Belum ada foto profil"}
                                 disabled
                                 className="w-full"
@@ -164,7 +165,7 @@ export default function LihatMahasiswa({ mahasiswa }: { mahasiswa: MahasiswaData
                         type="button"
                         onClick={() => window.history.back()}
                     >
-                        Batal
+                        Kembali
                     </Button>
                 </div>
             </div>

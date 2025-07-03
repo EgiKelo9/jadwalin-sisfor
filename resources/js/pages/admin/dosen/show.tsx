@@ -114,6 +114,7 @@ export default function LihatDosen({ dosen }: { dosen: DosenData }) {
                             <Label htmlFor='alamat'>Alamat</Label>
                             <Textarea
                                 id='alamat'
+                                tabIndex={6}
                                 disabled
                                 value={dosen.alamat}
                                 className="w-full"
@@ -126,7 +127,7 @@ export default function LihatDosen({ dosen }: { dosen: DosenData }) {
                             <Input
                                 id='nama'
                                 type='text'
-                                tabIndex={1}
+                                tabIndex={7}
                                 value={dosen.foto ?? "Belum ada foto profil"}
                                 disabled
                                 className="w-full"
@@ -165,7 +166,7 @@ export default function LihatDosen({ dosen }: { dosen: DosenData }) {
                         type="button"
                         onClick={() => window.history.back()}
                     >
-                        Batal
+                        Kembali
                     </Button>
                 </div>
             </div>

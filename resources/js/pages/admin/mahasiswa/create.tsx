@@ -30,7 +30,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: 'Buat',
-        href: '/admin/data-mahasiswa/{id}',
+        href: '/admin/data-mahasiswa/buat',
     },
 ];
 

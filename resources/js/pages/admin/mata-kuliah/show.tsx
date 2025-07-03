@@ -49,7 +49,7 @@ export default function LihatMataKuliah({ mataKuliah }: { mataKuliah: MataKuliah
                     </Button>
                 </div>
                 <div className='grid grid-cols-2 items-start gap-4 w-full'>
-                    <div className='grid gap-4 mt-2 col-span-2'>
+                    <div className='grid gap-4 mt-2 col-span-1'>
                         <Label htmlFor='nama'>Nama Mata Kuliah</Label>
                         <Input
                             id='nama'
@@ -61,11 +61,22 @@ export default function LihatMataKuliah({ mataKuliah }: { mataKuliah: MataKuliah
                         />
                     </div>
                     <div className='grid gap-4 mt-2 col-span-1'>
+                        <Label htmlFor='jenis'>Jenis Mata Kuliah</Label>
+                        <Input
+                            id='jenis'
+                            type='text'
+                            tabIndex={2}
+                            value={mataKuliah.jenis}
+                            disabled
+                            className="w-full capitalize"
+                        />
+                    </div>
+                    <div className='grid gap-4 mt-2 col-span-1'>
                         <Label htmlFor='kode'>Kode Mata Kuliah</Label>
                         <Input
                             id='kode'
                             type='text'
-                            tabIndex={1}
+                            tabIndex={3}
                             value={mataKuliah.kode}
                             disabled
                             className="w-full"
@@ -76,7 +87,7 @@ export default function LihatMataKuliah({ mataKuliah }: { mataKuliah: MataKuliah
                         <Input
                             id='dosen'
                             type='text'
-                            tabIndex={1}
+                            tabIndex={4}
                             value={mataKuliah.dosen.nama}
                             disabled
                             className="w-full"
@@ -87,7 +98,7 @@ export default function LihatMataKuliah({ mataKuliah }: { mataKuliah: MataKuliah
                         <Input
                             id='bobot_sks'
                             type='number'
-                            tabIndex={1}
+                            tabIndex={5}
                             value={mataKuliah.bobot_sks}
                             disabled
                             className="w-full"
@@ -98,7 +109,7 @@ export default function LihatMataKuliah({ mataKuliah }: { mataKuliah: MataKuliah
                         <Input
                             id='semester'
                             type='number'
-                            tabIndex={1}
+                            tabIndex={6}
                             value={mataKuliah.semester}
                             disabled
                             className="w-full"
@@ -109,7 +120,7 @@ export default function LihatMataKuliah({ mataKuliah }: { mataKuliah: MataKuliah
                         <Input
                             id='kapasitas'
                             type='number'
-                            tabIndex={1}
+                            tabIndex={7}
                             value={mataKuliah.kapasitas}
                             disabled
                             className="w-full"
@@ -120,7 +131,7 @@ export default function LihatMataKuliah({ mataKuliah }: { mataKuliah: MataKuliah
                         <Input
                             id='status'
                             type='text'
-                            tabIndex={1}
+                            tabIndex={8}
                             value={mataKuliah.status.replace('_', ' ')}
                             disabled
                             className="w-full capitalize"
@@ -133,7 +144,7 @@ export default function LihatMataKuliah({ mataKuliah }: { mataKuliah: MataKuliah
                         type="button"
                         onClick={() => window.history.back()}
                     >
-                        Batal
+                        Kembali
                     </Button>
                 </div>
             </div>

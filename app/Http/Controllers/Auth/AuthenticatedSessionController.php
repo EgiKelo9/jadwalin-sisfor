@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
         
         $role = auth('web')->user()->role;
 
-        return redirect()->intended(route('dashboard.' . $role, absolute: false));
+        return redirect()->intended(route($role . '.dashboard', absolute: false));
     }
 
     /**

@@ -44,7 +44,7 @@ class MataKuliahController extends Controller
      */
     public function create()
     {
-        $dosens = Dosen::orderBy('nama')->get();
+        $dosens = Dosen::where('status', 'aktif')->orderBy('nama')->get();
         return Inertia::render('admin/mata-kuliah/create', [
             'dosens' => $dosens,
             'user' => $this->getReturnedUser(),
@@ -121,7 +121,7 @@ class MataKuliahController extends Controller
     public function edit(string $id)
     {
         $mataKuliah = MataKuliah::with('dosen')->findOrFail($id);
-        $dosens = Dosen::orderBy('nama')->get();
+        $dosens = Dosen::where('status', 'aktif')->orderBy('nama')->get();
         return Inertia::render('admin/mata-kuliah/edit', [
             'mataKuliah' => $mataKuliah,
             'dosens' => $dosens,

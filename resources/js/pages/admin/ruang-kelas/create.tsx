@@ -30,7 +30,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: 'Buat',
-        href: '/admin/ruang-kelas/create',
+        href: '/admin/ruang-kelas/buat',
     },
 ];
 

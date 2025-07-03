@@ -58,7 +58,7 @@ type MataKuliahForm = {
     _method?: string;
 };
 
-type DosenForm = {
+type DosenData = {
     id: number;
     nip: string;
     nidn: string;
@@ -68,10 +68,9 @@ type DosenForm = {
     alamat: string;
     foto: File | null;
     status: 'aktif' | 'nonaktif';
-    _method?: string;
 };
 
-export default function UbahMataKuliah({ mataKuliah, dosens }: { mataKuliah: MataKuliahForm, dosens: DosenForm[] }) {
+export default function UbahMataKuliah({ mataKuliah, dosens }: { mataKuliah: MataKuliahForm, dosens: DosenData[] }) {
     const { data, setData, post, processing, errors } = useForm<MataKuliahForm>({
         id: mataKuliah.id,
         kode: mataKuliah.kode,
@@ -84,6 +83,9 @@ export default function UbahMataKuliah({ mataKuliah, dosens }: { mataKuliah: Mat
         dosen_id: mataKuliah.dosen_id,
         _method: 'PUT',
     });
+
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredDosens, setFilteredDosens] = useState(dosens);
 
     const { ToasterComponent } = useFlashMessages();
     const [deleting, setDeleting] = useState(false);
@@ -167,7 +169,7 @@ export default function UbahMataKuliah({ mataKuliah, dosens }: { mataKuliah: Mat
                     </div>
                 </div>
                 <div className='grid grid-cols-2 items-start gap-4 w-full'>
-                    <div className='grid gap-4 mt-2 col-span-2'>
+                    <div className='grid gap-4 mt-2 col-span-1'>
                         <Label htmlFor='nama'>Nama Mata Kuliah
                             <span className='text-red-500'>*</span>
                         </Label>
@@ -186,6 +188,27 @@ export default function UbahMataKuliah({ mataKuliah, dosens }: { mataKuliah: Mat
                         <InputError message={errors.nama} />
                     </div>
                     <div className='grid gap-4 mt-2 col-span-1'>
+                        <Label htmlFor='nama'>Jenis Mata Kuliah
+                            <span className='text-red-500'>*</span>
+                        </Label>
+                        <Select value={String(data.jenis)} onValueChange={(value) => setData('jenis', value as 'wajib' | 'pilihan')}>
+                            <SelectTrigger
+                                id='jenis'
+                                autoFocus
+                                tabIndex={2}
+                                disabled={processing}
+                                className="w-full"
+                            >
+                                <SelectValue placeholder={String(data.jenis)} defaultValue={data.jenis} />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="wajib">Wajib</SelectItem>
+                                <SelectItem value="pilihan">Pilihan</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <InputError message={errors.jenis} />
+                    </div>
+                    <div className='grid gap-4 mt-2 col-span-1'>
                         <Label htmlFor='kode'>Kode Mata Kuliah
                             <span className='text-red-500'>*</span>
                         </Label>
@@ -194,7 +217,7 @@ export default function UbahMataKuliah({ mataKuliah, dosens }: { mataKuliah: Mat
                             type='text'
                             required
                             autoFocus
-                            tabIndex={2}
+                            tabIndex={3}
                             value={data.kode}
                             onChange={(e) => setData('kode', e.target.value)}
                             disabled={processing}
@@ -211,15 +234,32 @@ export default function UbahMataKuliah({ mataKuliah, dosens }: { mataKuliah: Mat
                             <SelectTrigger
                                 id='dosen_id'
                                 autoFocus
-                                tabIndex={5}
+                                tabIndex={4}
                                 disabled={processing}
                                 className="w-full"
                             >
-                                <SelectValue placeholder={String(data.dosen_id)} defaultValue={data.dosen_id} />
+                                <SelectValue placeholder='Pilih Dosen Pengampu' />
                             </SelectTrigger>
                             <SelectContent>
-                                {dosens.map((dosen) => (
-                                    <SelectItem key={dosen.id} value={String(dosen.id)}>
+                                <Input
+                                    placeholder={`Cari Dosen...`}
+                                    value={searchQuery}
+                                    onChange={(event) => {
+                                        const query = event.target.value;
+                                        setSearchQuery(query);                                        
+                                        const filtered = query.trim() === '' 
+                                            ? dosens 
+                                            : dosens.filter(d => d.nama.toLowerCase().includes(query.toLowerCase()));
+                                        setFilteredDosens(filtered);
+                                    }}
+                                    className="text-sm"
+                                />
+                                {filteredDosens.map((dosen) => (
+                                    <SelectItem 
+                                        key={dosen.id} 
+                                        value={String(dosen.id)}
+                                        onSelect={() => setSearchQuery('')}
+                                    >
                                         {dosen.nama}
                                     </SelectItem>
                                 ))}

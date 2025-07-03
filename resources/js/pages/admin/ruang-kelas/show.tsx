@@ -59,7 +59,7 @@ export default function LihatRuangKelas({ ruangKelas }: { ruangKelas: RuangKelas
                         <Input
                             id='gedung'
                             type='text'
-                            tabIndex={1}
+                            tabIndex={2}
                             value={ruangKelas.gedung}
                             disabled
                             className="w-full"
@@ -70,7 +70,7 @@ export default function LihatRuangKelas({ ruangKelas }: { ruangKelas: RuangKelas
                         <Input
                             id='lantai'
                             type='number'
-                            tabIndex={1}
+                            tabIndex={3}
                             value={ruangKelas.lantai}
                             disabled
                             className="w-full"
@@ -81,7 +81,7 @@ export default function LihatRuangKelas({ ruangKelas }: { ruangKelas: RuangKelas
                         <Input
                             id='kapasitas'
                             type='number'
-                            tabIndex={1}
+                            tabIndex={4}
                             value={ruangKelas.kapasitas}
                             disabled
                             className="w-full"
@@ -92,7 +92,7 @@ export default function LihatRuangKelas({ ruangKelas }: { ruangKelas: RuangKelas
                         <Input
                             id='status'
                             type='text'
-                            tabIndex={1}
+                            tabIndex={5}
                             value={ruangKelas.status.replace('_', ' ')}
                             disabled
                             className="w-full capitalize"
@@ -105,7 +105,7 @@ export default function LihatRuangKelas({ ruangKelas }: { ruangKelas: RuangKelas
                         type="button"
                         onClick={() => window.history.back()}
                     >
-                        Batal
+                        Kembali
                     </Button>
                 </div>
             </div>
