@@ -96,7 +96,7 @@ export default function UbahMataKuliah({ mataKuliah, dosens }: { mataKuliah: Mat
         router.delete(route('admin.mata-kuliah.destroy', mataKuliah.id), {
             onSuccess: () => {
                 router.reload();
-                sessionStorage.setItem('success', 'Ruang kelas berhasil dihapus.');
+                sessionStorage.setItem('success', 'Mata Kuliah berhasil dihapus.');
             },
             onError: (error) => {
                 console.error('Gagal menghapus mata kuliah:', error);

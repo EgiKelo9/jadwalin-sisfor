@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
@@ -18,6 +18,8 @@ import {
   Plus,
   Filter,
   ChevronDown,
+  ChevronDownIcon,
+  History,
 } from "lucide-react"
 
 import {
@@ -63,7 +65,7 @@ import {
 export interface ColumnFilterConfig {
   columnId: string
   label: string
-  type: 'select' | 'multiselect' | 'text'
+  type: 'select' | 'multiselect' | 'text' | 'date'
   options?: string[] // For select/multiselect types
   placeholder?: string
 }
@@ -78,7 +80,7 @@ interface DataTableProps<TData extends { id: string | number }, TValue> {
   showCreateButton?: boolean
   showColumnFilter?: boolean
   showDataFilter?: boolean
-  // New prop for column filters
+  showHistoryButton?: boolean
   columnFilters?: ColumnFilterConfig[]
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -120,6 +122,8 @@ function ColumnFilter<TData>({
   React.useEffect(() => {
     if (config.type === 'text') {
       (column.columnDef as any).filterFn = 'textContains'
+    } else if (config.type === 'date') {
+      (column.columnDef as any).filterFn = 'dateEquals'
     } else {
       (column.columnDef as any).filterFn = 'exactMatch'
     }
@@ -135,6 +139,43 @@ function ColumnFilter<TData>({
           onChange={(event) => column.setFilterValue(event.target.value)}
           className="text-sm"
         />
+      </div>
+    )
+  }
+
+  if (config.type === 'date') {
+    const [date, setDate] = React.useState<string>('')
+
+    // Apply date filter when date changes
+    React.useEffect(() => {
+      if (date) {
+        column.setFilterValue(date)
+      } else {
+        column.setFilterValue(undefined)
+      }
+    }, [date, column])
+
+    return (
+      <div className="flex flex-col gap-2">
+        <Input
+          type="date"
+          value={date}
+          onChange={(event) => {
+            setDate(event.target.value)
+          }}
+          className="text-sm w-48"
+          placeholder="Pilih Tanggal"
+        />
+        {date && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setDate('')}
+            className="h-6 text-xs"
+          >
+            Clear Filter
+          </Button>
+        )}
       </div>
     )
   }
@@ -178,6 +219,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
   showCreateButton = true,
   showColumnFilter = true,
   showDataFilter = true,
+  showHistoryButton = false,
   columnFilters = [], // New prop with default empty array
   columns,
   data,
@@ -199,6 +241,17 @@ export function DataTable<TData extends { id: string | number }, TValue>({
   const textContains: FilterFn<TData> = (row, columnId, filterValue) => {
     const value = String(row.getValue(columnId) || '')
     return value.toLowerCase().includes(String(filterValue).toLowerCase())
+  }
+
+  const dateEquals: FilterFn<TData> = (row, columnId, filterValue) => {
+    const rowValue = row.getValue(columnId)
+    if (!rowValue || !filterValue) return true
+
+    // Convert row value to date string (assuming it's in Y-m-d format)
+    const rowDate = new Date(rowValue as string).toISOString().split('T')[0]
+    const filterDate = String(filterValue)
+
+    return rowDate === filterDate
   }
 
   const table = useReactTable({
@@ -228,6 +281,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
     filterFns: {
       exactMatch,
       textContains,
+      dateEquals,
     },
     state: {
       sorting,
@@ -244,12 +298,12 @@ export function DataTable<TData extends { id: string | number }, TValue>({
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         {/* title */}
         <h1 className='text-xl font-semibold'>{title}</h1>
-        <div className="flex items-center justify-center max-w-sm mb-2 gap-4">
+        <div className="flex items-center justify-center max-w-lg mb-2 gap-4">
           {/* search bar */}
           {showSearch && (
-            <div className="flex justify-end items-center">
+            <div className="flex justify-end items-center w-full">
               <Input
-                placeholder={`Cari ${title.toLowerCase()}...`}
+                placeholder={`Cari data...`}
                 value={(table.getState().globalFilter as string) ?? ""}
                 onChange={(event) => {
                   table.setGlobalFilter(event.target.value);
@@ -281,6 +335,14 @@ export function DataTable<TData extends { id: string | number }, TValue>({
                 </div>
               </DropdownMenuContent>
             </DropdownMenu>
+          )}
+          {/* history button */}
+          {showHistoryButton && (
+            <Link href={`${href}/riwayat`}>
+              <Button variant="outline" className="ml-auto w-9">
+                <History />
+              </Button>
+            </Link>
           )}
           {/* column filter */}
           {showColumnFilter && (

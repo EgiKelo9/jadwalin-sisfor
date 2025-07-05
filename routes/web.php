@@ -1,16 +1,14 @@
 <?php
 
-use App\Http\Controllers\Admin\MahasiswaController as AdminMahasiswaController;
-use App\Http\Controllers\Admin\DosenController as AdminDosenController;
-use App\Http\Controllers\Admin\RuangKelasController as AdminRuangKelasController;
-use App\Http\Controllers\Admin\MataKuliahController as AdminMataKuliahController;
-use App\Http\Controllers\DashboardController;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\DosenController as AdminDosenController;
+use App\Http\Controllers\Admin\MahasiswaController as AdminMahasiswaController;
+use App\Http\Controllers\Admin\MataKuliahController as AdminMataKuliahController;
+use App\Http\Controllers\Admin\RuangKelasController as AdminRuangKelasController;
+use App\Http\Controllers\Admin\PeminjamanKelasController as AdminPeminjamanKelasController;
 
-// Route::get('/', function () {
-//     return Inertia::render('welcome');
-// })->name('home');
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -33,6 +31,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('ruang-kelas', AdminRuangKelasController::class);
         Route::resource('mata-kuliah', AdminMataKuliahController::class);
         Route::put('mata-kuliah/{mata_kuliah}/status', [AdminMataKuliahController::class, 'updateStatus'])->name('mata-kuliah.updateStatus');
+        Route::prefix('peminjaman-kelas')->name('peminjaman-kelas.')->group(function () {
+            Route::get('riwayat', [AdminPeminjamanKelasController::class, 'history'])->name('history');
+            Route::get('riwayat/{peminjaman_kelas}', [AdminPeminjamanKelasController::class, 'historyShow'])->name('history.show');
+            Route::delete('riwayat/{peminjaman_kelas}', [AdminPeminjamanKelasController::class, 'historyDestroy'])->name('history.destroy');
+            Route::put('{peminjaman_kelas}/status', [AdminPeminjamanKelasController::class, 'updateStatus'])->name('updateStatus');
+        });
+        Route::resource('peminjaman-kelas', AdminPeminjamanKelasController::class)->except(['edit', 'update', 'destroy']);
     });
 
 });
