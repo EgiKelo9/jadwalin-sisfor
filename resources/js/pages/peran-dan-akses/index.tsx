@@ -20,10 +20,11 @@ export const columnFiltersConfig: ColumnFilterConfig[] = [
 interface AksesRoleTableProps {
     aksesRole: any[];
     userRole: string;
+    // tabAktif: string;
     canUpdate?: boolean;
 }
 
-export default function AksesRoleIndex({ aksesRole, userRole, canUpdate }: AksesRoleTableProps) {
+export default function AksesRoleIndex({ aksesRole, userRole, canUpdate}: AksesRoleTableProps) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: userRole.charAt(0).toUpperCase() + userRole.slice(1),
@@ -37,7 +38,7 @@ export default function AksesRoleIndex({ aksesRole, userRole, canUpdate }: Akses
 
     // Create columns with permissions
     const columns = createAksesRoleColumns(userRole, canUpdate);
-
+    // console.log(tabAktif);
     return (
         <AppLayout breadcrumbs={breadcrumbs} userRole={userRole}>
             <Head title="Peran dan Akses" />

@@ -29,6 +29,7 @@ class PeminjamanKelasController extends Controller
      */
     public function index()
     {
+        // dd("test");
         $user = User::find(auth('web')->user()->id);
         if (!$user->hasAccess('Lihat Peminjaman Kelas')) {
             return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk melihat peminjaman kelas.']);
