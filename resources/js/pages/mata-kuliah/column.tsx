@@ -71,7 +71,7 @@ export function createMataKuliahColumns(userRole?: string, canUpdate?: boolean, 
             switchTrueValue: 'aktif',
             switchFalseValue: 'nonaktif',
         },
-        showSelectColumn: true,
+        showSelectColumn: false,
     })
 }
 
