@@ -84,6 +84,162 @@ class User extends Authenticatable
             ->implode('');
     }
 
+    /**
+     * Mendapatkan semua akses yang dimiliki user
+     * Kombinasi dari akses default role + akses khusus
+     */
+    public function getAllAccess(): array
+    {
+        $defaultAccess = $this->getDefaultAccessByRole();
+        $customAccess = $this->getCustomAccess();
+        return array_unique(array_merge($defaultAccess, $customAccess));
+    }
+
+    /**
+     * Mendapatkan akses default berdasarkan role user
+     */
+    public function getDefaultAccessByRole(): array
+    {
+        $userRole = $this->getRole();
+        $aksesRoles = AksesRole::where('nama_role', $userRole)->get();
+        return $aksesRoles->pluck('akses')->toArray();
+    }
+
+    /**
+     * Mendapatkan akses khusus dari tabel akses_akuns
+     */
+    public function getCustomAccess(): array
+    {
+        $customAccess = $this->aksesRoles()
+            ->wherePivot('status', true)
+            ->get();
+        return $customAccess->pluck('akses')->toArray();
+    }
+
+    /**
+     * Mengecek apakah user memiliki akses tertentu
+     */
+    public function hasAccess(string $access): bool
+    {
+        return in_array($access, $this->getAllAccess());
+    }
+
+    /**
+     * Mengecek apakah user memiliki salah satu dari beberapa akses
+     */
+    public function hasAnyAccess(array $accesses): bool
+    {
+        $userAccesses = $this->getAllAccess();
+        return !empty(array_intersect($accesses, $userAccesses));
+    }
+
+    /**
+     * Mengecek apakah user memiliki semua akses yang diminta
+     */
+    public function hasAllAccess(array $accesses): bool
+    {
+        $userAccesses = $this->getAllAccess();
+        return empty(array_diff($accesses, $userAccesses));
+    }
+
+    /**
+     * Menambahkan semua akses default berdasarkan role user
+     */
+    public function grantDefaultAccessByRole(string $role): void
+    {
+        $targetRole = $role ?? $this->getRole();
+        $defaultAccesses = AksesRole::where('nama_role', $targetRole)->get();
+
+        // Grant access for target role with status = true
+        foreach ($defaultAccesses as $aksesRole) {
+            $existingAccess = $this->aksesRoles()->where('akses_role_id', $aksesRole->id)->first();
+
+            if ($existingAccess) {
+                $this->aksesRoles()->updateExistingPivot($aksesRole->id, ['status' => true]);
+            } else {
+                $this->aksesRoles()->attach($aksesRole->id, ['status' => true]);
+            }
+        }
+
+        // Handle other roles with status = false
+        $otherRoleAccesses = AksesRole::where('nama_role', '!=', $targetRole)->get();
+
+        foreach ($otherRoleAccesses as $aksesRole) {
+            $existingAccess = $this->aksesRoles()->where('akses_role_id', $aksesRole->id)->first();
+
+            if ($existingAccess) {
+                $this->aksesRoles()->updateExistingPivot($aksesRole->id, ['status' => false]);
+            } else {
+                $this->aksesRoles()->attach($aksesRole->id, ['status' => false]);
+            }
+        }
+    }
+
+    /**
+     * Menambahkan akses khusus untuk user
+     */
+    public function grantCustomAccess(string $role, string $access): void
+    {
+        $aksesRoles = AksesRole::where('akses', $access)->get();
+        if ($aksesRoles->isEmpty()) return;
+
+        foreach ($aksesRoles as $aksesRole) {
+            $roleStatus = ($aksesRole->nama_role === $role) ? true : false;
+            $existingAccess = $this->aksesRoles()->where('akses_role_id', $aksesRole->id)->first();
+
+            if ($existingAccess) {
+                $this->aksesRoles()->updateExistingPivot($aksesRole->id, ['status' => $roleStatus]);
+            } else {
+                $this->aksesRoles()->attach($aksesRole->id, ['status' => $roleStatus]);
+            }
+        }
+    }
+
+    /**
+     * Mencabut akses khusus dari user
+     */
+    public function revokeCustomAccess(string $access): bool
+    {
+        $aksesRole = AksesRole::where('akses', $access)->first();
+
+        if ($aksesRole) {
+            $this->aksesRoles()->detach($aksesRole->id);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Menonaktifkan akses khusus tanpa menghapus
+     */
+    public function disableCustomAccess(string $access): bool
+    {
+        $aksesRole = AksesRole::where('akses', $access)->first();
+
+        if ($aksesRole) {
+            $this->aksesRoles()->updateExistingPivot($aksesRole->id, ['status' => false]);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Mengaktifkan kembali akses khusus
+     */
+    public function enableCustomAccess(string $access): bool
+    {
+        $aksesRole = AksesRole::where('akses', $access)->first();
+
+        if ($aksesRole) {
+            $this->aksesRoles()->updateExistingPivot($aksesRole->id, ['status' => true]);
+            return true;
+        }
+
+        return false;
+    }
+
     public function mahasiswa(): BelongsTo
     {
         return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id');
@@ -101,6 +257,8 @@ class User extends Authenticatable
 
     public function aksesRoles(): BelongsToMany
     {
-        return $this->belongsToMany(AksesRole::class, 'akses_akuns', 'user_id', 'akses_role_id');
+        return $this->belongsToMany(AksesRole::class, 'akses_akuns', 'user_id', 'akses_role_id')
+            ->withPivot('status')
+            ->withTimestamps();
     }
 }

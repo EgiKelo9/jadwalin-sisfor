@@ -449,7 +449,7 @@ export function createTableColumns<T extends BaseEntity>(
                   )}
                   {(actionConfig.showActionButton && (actionConfig.showMultipleButtons || actionConfig.showSwitch || actionConfig.showEdit || actionConfig.showDelete)) && <DropdownMenuSeparator />}
                   <div className="flex flex-col items-start">
-                    {actionConfig.showMultipleButtons && actionConfig.multipleButtonKeys && actionConfig.multipleButtonKeys.length > 0 && (
+                    {(actionConfig.showMultipleButtons && actionConfig.multipleButtonKeys && actionConfig.multipleButtonKeys.length > 0) && (
                       actionConfig.multipleButtonKeys.map((key, index) => {
                         const label = Array.isArray(actionConfig.multipleButtonLabels) ? actionConfig.multipleButtonLabels[index] : actionConfig.multipleButtonLabels;
                         const value = Array.isArray(actionConfig.multipleButtonValues) ? actionConfig.multipleButtonValues[index] : actionConfig.multipleButtonValues;

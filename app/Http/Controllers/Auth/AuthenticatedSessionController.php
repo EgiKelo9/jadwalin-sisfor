@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,7 @@ class AuthenticatedSessionController extends Controller
         return Inertia::render('auth/login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => $request->session()->get('status'),
+            'error' => $request->session()->get('error'),
         ]);
     }
 
@@ -29,13 +31,23 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
-        
-        $request->session()->regenerate();
-        
-        $role = auth('web')->user()->role;
+        $user = User::where('email', $request->email)->first();
+        $status = match ($user->role) {
+            'mahasiswa' => $user->mahasiswa->status,
+            'dosen' => $user->dosen->status,
+            'admin' => $user->admin->status,
+            default => 'unknown',
+        };
 
-        return redirect()->intended(route($role . '.dashboard', absolute: false));
+        if ($status !== 'aktif') {
+            return redirect()->back()->with('error', 'Status Anda tidak aktif. Silakan hubungi administrator.');
+        }
+
+        $request->authenticate();
+
+        $request->session()->regenerate();
+
+        return redirect()->intended(route($user->role . '.dashboard', absolute: false));
     }
 
     /**

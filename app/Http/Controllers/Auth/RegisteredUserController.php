@@ -8,6 +8,7 @@ use App\Models\Admin;
 use App\Models\Dosen;
 use Inertia\Response;
 use App\Models\Mahasiswa;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use App\Http\Controllers\Controller;
@@ -58,12 +59,25 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $role,
+            'mahasiswa_id' => $mahasiswa?->id,
+            'dosen_id' => $dosen?->id,
+            'admin_id' => $admin?->id,
+            'email_verified_at' => now(),
+            'remember_token' => Str::random(10),
         ]);
+
+        $user->grantDefaultAccessByRole($role);
+
+        match ($role) {
+            'mahasiswa' => $user->mahasiswa->status = 'aktif',
+            'dosen' => $user->dosen->status = 'aktif',
+            'admin' => $user->admin->status = 'aktif',
+        };
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect()->intended(route('dashboard.' . $role, absolute: false));
+        return redirect()->intended(route($role . '.dashboard', absolute: false));
     }
 }

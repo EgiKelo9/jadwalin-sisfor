@@ -18,10 +18,10 @@ class RuangKelasFactory extends Factory
     {
         return [
             'nama' => 'Ruang ' . $this->faker->unique()->buildingNumber(),
-            'gedung' => 'Gedung ' . $this->faker->word(),
+            'gedung' => $this->faker->randomElement(['Gedung Dekanat', 'Gedung Bawah', 'Gedung Baru']),
             'lantai' => $this->faker->numberBetween(1, 3),
             'kapasitas' => $this->faker->randomElement([24, 48, 72]),
-            'status' => $this->faker->randomElement(['layak', 'tidak_layak', 'perbaikan']),
+            'status' => 'layak',
         ];
     }
 }

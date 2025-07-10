@@ -17,7 +17,7 @@ export function NavUser() {
             case 'mahasiswa':
                 return auth.user.mahasiswa;
             case 'dosen':
-            return auth.user.dosen;
+                return auth.user.dosen;
             case 'admin':
                 return auth.user.admin;
         }

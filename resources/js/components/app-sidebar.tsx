@@ -57,7 +57,7 @@ const penggunaNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [
     {
         title: 'Peran dan Akses',
-        href: '/admin/peran-dan-akses',
+        href: '/peran-dan-akses',
         icon: Settings,
     },
 ];
@@ -98,7 +98,10 @@ export function AppSidebar({ userRole }: { userRole?: string }) {
 
             <SidebarFooter>
                 {userRole === 'admin' && (
-                    <NavFooter items={footerNavItems} className="mt-auto" />
+                    <NavMain items={footerNavItems.map(item => ({
+                        ...item,
+                        href: `/${userRole}${item.href}`,
+                    }))} />
                 )}
                 <NavUser />
             </SidebarFooter>
