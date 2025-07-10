@@ -74,7 +74,7 @@ export function createDosenColumns(userRole?: string, canUpdate?: boolean, canDe
             switchTrueValue: 'aktif',
             switchFalseValue: 'nonaktif',
         },
-        showSelectColumn: true,
+        showSelectColumn: false,
     })
 }
 

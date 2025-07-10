@@ -56,7 +56,7 @@ export function createRuangKelasColumns(userRole?: string, canUpdate?: boolean, 
             showActionButton: false,
             showMultipleButtons: false,
         },
-        showSelectColumn: true,
+        showSelectColumn: false,
     });
 }
 

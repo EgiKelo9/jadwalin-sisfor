@@ -67,7 +67,7 @@ export function createMahasiswaColumns(userRole?: string, canUpdate?: boolean, c
             switchTrueValue: 'aktif',
             switchFalseValue: 'nonaktif',
         },
-        showSelectColumn: true,
+        showSelectColumn: false,
     });
 }
 

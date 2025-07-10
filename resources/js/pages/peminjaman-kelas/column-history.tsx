@@ -88,7 +88,7 @@ export function createPeminjamanKelasColumns(userRole?: string, canUpdate?: bool
             showActionButton: false,
             showMultipleButtons: false,
         },
-        showSelectColumn: true,
+        showSelectColumn: false,
     });
 }
 

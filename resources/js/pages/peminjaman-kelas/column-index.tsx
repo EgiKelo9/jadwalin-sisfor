@@ -87,7 +87,7 @@ export function createPeminjamanKelasColumns(userRole?: string, canConfirm?: boo
             multipleButtonVariants: ["default", "destructive"],
             multipleButtonPaths: ['.updateStatus', '.updateStatus'],
         },
-        showSelectColumn: true,
+        showSelectColumn: false,
     });
 }
 
