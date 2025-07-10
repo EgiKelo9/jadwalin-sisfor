@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\MataKuliah;
+use App\Models\RuangKelas;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,11 @@ class JadwalFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'mata_kuliah_id' => MataKuliah::all()->random()->id,
+            'ruang_kelas_id' => RuangKelas::all()->random()->id,
+            'hari' => $this->faker->randomElement(['senin', 'selasa', 'rabu', 'kamis', 'jumat']),
+            'jam_mulai' => $this->faker->time('H:i'),
+            'jam_selesai' => $this->faker->time('H:i'),
         ];
     }
 }

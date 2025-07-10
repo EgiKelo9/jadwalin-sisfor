@@ -51,6 +51,7 @@ export default function AksesRoleIndex({ aksesRole, userRole, canUpdate }: Akses
                     showCreateButton={false}
                     showColumnFilter={true}
                     showDataFilter={true}
+                    showActiveTab={true}
                     activeTab={['General', 'Khusus']}
                     defaultTab='General'
                     columnFilters={columnFiltersConfig}

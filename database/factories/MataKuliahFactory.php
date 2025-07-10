@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Dosen;
+use App\Models\Jadwal;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -27,5 +28,15 @@ class MataKuliahFactory extends Factory
             'jenis' => $this->faker->randomElement(['wajib', 'pilihan']),
             'dosen_id' => Dosen::all()->random()->id ?? null,
         ];
+    }
+
+    public function withSchedule($count = 1)
+    {
+        return $this->afterCreating(function ($mataKuliah) use ($count) {
+            if ($mataKuliah->status === 'aktif') {
+                $jadwal = Jadwal::factory($count)->create(['mata_kuliah_id' => $mataKuliah->id]);
+                $mataKuliah->jadwal()->saveMany($jadwal);
+            }
+        });
     }
 }

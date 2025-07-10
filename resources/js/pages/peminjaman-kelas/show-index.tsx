@@ -97,23 +97,23 @@ export default function LihatPeminjamanKelas({ peminjamanKelas, userRole, canUpd
                             type='text'
                             tabIndex={3}
                             value={
-                                typeof peminjamanKelas.tanggal_peminjaman === 'string' 
+                                typeof peminjamanKelas.tanggal_peminjaman === 'string'
                                     ? new Date(peminjamanKelas.tanggal_peminjaman).toLocaleDateString('id-ID', {
                                         day: '2-digit',
                                         month: '2-digit',
                                         year: 'numeric',
-                                      }).replace(/\//g, '-')
+                                    }).replace(/\//g, '-')
                                     : peminjamanKelas.tanggal_peminjaman.toLocaleDateString('id-ID', {
                                         day: '2-digit',
                                         month: '2-digit',
                                         year: 'numeric',
-                                      }).replace(/\//g, '-')
+                                    }).replace(/\//g, '-')
                             }
                             disabled
                             className="w-full"
                         />
                     </div>
-                    <div className='grid gap-4 mt-2 col-span-1'>
+                    <div className='relative grid gap-4 mt-2 col-span-1'>
                         <Label htmlFor='jam_mulai'>Waktu Mulai</Label>
                         <Input
                             id='jam_mulai'
@@ -123,8 +123,11 @@ export default function LihatPeminjamanKelas({ peminjamanKelas, userRole, canUpd
                             disabled
                             className="w-full"
                         />
+                        <span className="absolute right-3 top-5/7 transform -translate-y-1/2 text-sm text-primary/50">
+                            WITA
+                        </span>
                     </div>
-                    <div className='grid gap-4 mt-2 col-span-1'>
+                    <div className='relative grid gap-4 mt-2 col-span-1'>
                         <Label htmlFor='jam_selesai'>Waktu Selesai</Label>
                         <Input
                             id='jam_selesai'
@@ -134,6 +137,9 @@ export default function LihatPeminjamanKelas({ peminjamanKelas, userRole, canUpd
                             disabled
                             className="w-full"
                         />
+                        <span className="absolute right-3 top-5/7 transform -translate-y-1/2 text-sm text-primary/50">
+                            WITA
+                        </span>
                     </div>
                     <div className='grid gap-4 mt-2 col-span-2'>
                         <Label htmlFor='alasan'>Alasan Peminjaman</Label>

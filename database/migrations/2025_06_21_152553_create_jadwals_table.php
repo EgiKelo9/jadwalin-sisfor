@@ -24,6 +24,8 @@ return new class extends Migration
             $table->enum('hari', ['senin', 'selasa', 'rabu', 'kamis', 'jumat']);
             $table->time('jam_mulai');
             $table->time('jam_selesai');
+            $table->enum('status', ['aktif', 'nonaktif'])
+                ->default('aktif');
             $table->timestamps();
         });
     }

@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -24,8 +24,8 @@ class MataKuliah extends Model
         return $this->belongsTo(Dosen::class, 'dosen_id');
     }
 
-    public function jadwals(): HasMany
+    public function jadwal(): HasOne
     {
-        return $this->hasMany(Jadwal::class, 'mata_kuliah_id');
+        return $this->hasOne(Jadwal::class, 'mata_kuliah_id');
     }
 }

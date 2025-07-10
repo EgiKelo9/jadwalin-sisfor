@@ -33,4 +33,9 @@ class Dosen extends Model
     {
         return $this->hasMany(PeminjamanKelas::class, 'dosen_id');
     }
+
+    public function perubahanJadwals(): HasMany
+    {
+        return $this->hasMany(PerubahanJadwal::class, 'mahasiswa_id');
+    }
 }

@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookMarked, CalendarCheck2, DoorOpen, GraduationCap, House, ScrollText, Settings, User } from 'lucide-react';
+import { BookMarked, Calendar1, CalendarCheck2, DoorOpen, GraduationCap, House, ScrollText, Settings, User } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const berandaNavItems: NavItem[] = [
@@ -19,6 +19,11 @@ const jadwalNavItems: NavItem[] = [
     {
         title: 'Jadwal Perkuliahan',
         href: '/jadwal-perkuliahan',
+        icon: Calendar1,
+    },
+    {
+        title: 'Daftar Jadwal',
+        href: '/daftar-jadwal',
         icon: CalendarCheck2,
     },
     {
