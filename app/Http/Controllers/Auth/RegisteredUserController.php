@@ -47,12 +47,15 @@ class RegisteredUserController extends Controller
         $dosen = Dosen::where('email', $request->email)->first();
         $admin = Admin::where('email', $request->email)->first();
 
+
         if ($mahasiswa) {
             $role = 'mahasiswa';
         } elseif ($dosen) {
             $role = 'dosen';
         } elseif ($admin) {
             $role = 'admin';
+        } else {
+            return redirect()->back()->with('error', 'Email anda tidak tersedia. Silakan hubungi administrator.');
         }
 
         $user = User::create([
