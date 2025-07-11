@@ -65,7 +65,15 @@ export function createJadwalSementaraColumns(userRole?: string, canUpdate?: bool
                 key: "tanggal",
                 header: "Tanggal",
                 sortable: true,
-                type: "date",
+                type: "custom",
+                customRenderer: (item) => {
+                    return new Date(item.tanggal).toLocaleDateString('id-ID', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                }
             },
             {
                 key: "jam_mulai",
@@ -83,7 +91,7 @@ export function createJadwalSementaraColumns(userRole?: string, canUpdate?: bool
         actionConfig: {
             basePath: userRole + ".jadwal-perkuliahan",
             showEdit: canUpdate ?? false,
-            showDelete: false,
+            showDelete: canDelete ?? false,
             showSwitch: false,
             showActionButton: false,
             showMultipleButtons: false,

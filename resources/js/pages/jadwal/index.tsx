@@ -9,10 +9,11 @@ interface DaftarJadwalTableProps {
     userRole: string;
     canCreate?: boolean;
     canUpdate?: boolean;
+    canDelete?: boolean;
     canShowAjukan?: boolean;
 }
 
-export default function Jadwal({ jadwals, userRole, canCreate, canUpdate, canShowAjukan }: DaftarJadwalTableProps) {
+export default function Jadwal({ jadwals, userRole, canCreate, canUpdate, canDelete, canShowAjukan }: DaftarJadwalTableProps) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: userRole.charAt(0).toUpperCase() + userRole.slice(1),
@@ -25,7 +26,7 @@ export default function Jadwal({ jadwals, userRole, canCreate, canUpdate, canSho
     ];
 
     // Create columns with permissions
-    const columns = createJadwalSementaraColumns(userRole, canUpdate);
+    const columns = createJadwalSementaraColumns(userRole, canUpdate, canDelete);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs} userRole={userRole}>

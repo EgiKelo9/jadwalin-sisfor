@@ -40,6 +40,7 @@ class PerubahanJadwalSementaraFactory extends Factory
             'jam_mulai_baru' => fake()->time('H:i'),
             'jam_selesai_baru' => fake()->time('H:i'),
             'alasan_perubahan' => fake()->sentence(10),
+            'lokasi' => 'offline',
             'status' => 'pending',
         ];
     }

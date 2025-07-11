@@ -41,6 +41,7 @@ return new class extends Migration
             $table->time('jam_mulai_baru');
             $table->time('jam_selesai_baru');
             $table->string('alasan_perubahan');
+            $table->enum('lokasi', ['online', 'offline'])->default('offline');
             $table->enum('status', ['pending', 'diterima', 'ditolak'])->default('pending');
             $table->timestamps();
         });
