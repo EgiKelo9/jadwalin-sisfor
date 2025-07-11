@@ -30,7 +30,7 @@ class AksesRoleController extends Controller
      */
     public function index(Request $request)
     {
-        return Inertia::render('dashboard/Dashboard');
+        // return Inertia::render('dashboard/Dashboard');
 
         $user = User::find(auth('web')->user()->id);
         if (!$user->hasAccess('Lihat Peran dan Akses')) {
@@ -135,9 +135,9 @@ class AksesRoleController extends Controller
 
         if ($account->mahasiswa) {
             $role = 'mahasiswa';
-        } elseif ($account->$dosen) {
+        } elseif ($account->dosen) {
             $role = 'dosen';
-        } elseif ($account->$admin) {
+        } elseif ($account->admin) {
             $role = 'admin';
         } else {
             $role = "Gak ada cik";
@@ -173,7 +173,7 @@ class AksesRoleController extends Controller
         // $selisihRole = $aksesRole->diff($requestIds);
 
         // Tampilkan hasil
-        dd($selisih->values()->all());
+        // dd($selisih->values()->all());
         // dd($aksesRole,$request);
     }
 }

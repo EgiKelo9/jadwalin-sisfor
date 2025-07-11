@@ -18,6 +18,21 @@ class PerubahanJadwalSementara extends Model
      */
     protected $guarded = [];
 
+    public function mahasiswa(): BelongsTo
+    {
+        return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id');
+    }
+
+    public function dosen(): BelongsTo
+    {
+        return $this->belongsTo(Dosen::class, 'dosen_id');
+    }
+
+    public function admin(): BelongsTo
+    {
+        return $this->belongsTo(Admin::class, 'admin_id');
+    }
+
     public function jadwalSementara(): BelongsTo
     {
         return $this->belongsTo(JadwalSementara::class, 'jadwal_sementara_id');

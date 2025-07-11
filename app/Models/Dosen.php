@@ -38,4 +38,9 @@ class Dosen extends Model
     {
         return $this->hasMany(PerubahanJadwal::class, 'mahasiswa_id');
     }
+
+    public function perubahanJadwalSementaras(): HasMany
+    {
+        return $this->hasMany(PerubahanJadwalSementara::class, 'mahasiswa_id');
+    }
 }
