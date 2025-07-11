@@ -1,5 +1,5 @@
 import Sidebar from "./Sidebar";
-import Calendar from "./calendar";
+import Calendar from "./Calendar";
 import Schedule from "./Schedule";
 
 export default function Dashboard() {
