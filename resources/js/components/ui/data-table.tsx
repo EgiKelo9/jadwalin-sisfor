@@ -73,6 +73,7 @@ export interface ColumnFilterConfig {
 interface DataTableProps<TData extends { id: string | number }, TValue> {
   title: string
   href: string
+  showActiveTab?: boolean
   activeTab?: string[]
   defaultTab?: string
   showSearch?: boolean
@@ -81,6 +82,9 @@ interface DataTableProps<TData extends { id: string | number }, TValue> {
   showColumnFilter?: boolean
   showDataFilter?: boolean
   showHistoryButton?: boolean
+  showTopActionButton?: boolean
+  topActionButtonLabel?: string
+  topActionButtonHref?: string
   columnFilters?: ColumnFilterConfig[]
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -213,6 +217,7 @@ function ColumnFilter<TData>({
 export function DataTable<TData extends { id: string | number }, TValue>({
   title,
   href,
+  showActiveTab = false,
   activeTab,
   defaultTab,
   showSearch = true,
@@ -220,6 +225,9 @@ export function DataTable<TData extends { id: string | number }, TValue>({
   showColumnFilter = true,
   showDataFilter = true,
   showHistoryButton = false,
+  showTopActionButton = false,
+  topActionButtonLabel,
+  topActionButtonHref,
   columnFilters = [], // New prop with default empty array
   columns,
   data,
@@ -376,6 +384,11 @@ export function DataTable<TData extends { id: string | number }, TValue>({
             </DropdownMenu>
           )}
           {/* create button */}
+          {showTopActionButton && (
+            <Button variant="outline" asChild>
+              <Link href={`${href}/${topActionButtonHref}`}>{topActionButtonLabel}</Link>
+            </Button>
+          )}
           {showCreateButton && (
             <Button variant="primary" asChild>
               <Link href={`${href}/buat`}><Plus />Buat</Link>
@@ -384,7 +397,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
         </div>
       </div>
       {/* active tab */}
-      {activeTab && (
+      {(showActiveTab && activeTab) && (
         <div className="flex items-center justify-center">
           <div className="flex items-center justify-center gap-2 py-2 px-2 bg-muted/50 rounded-md">
             {activeTab.map((tab) => {
@@ -462,7 +475,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
                     return (
-                      <TableHead key={header.id} className="py-4">
+                      <TableHead key={header.id} className="py-4 pl-4">
                         {header.isPlaceholder
                           ? null
                           : flexRender(
@@ -485,7 +498,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="truncate max-w-96">
+                    <TableCell key={cell.id} className="truncate max-w-96 pl-4">
                       {/* Only wrap non-action cells with Link */}
                       {cell.column.id === "actions" || cell.column.id === "select" ? (
                         flexRender(cell.column.columnDef.cell, cell.getContext())

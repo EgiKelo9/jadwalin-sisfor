@@ -38,6 +38,7 @@ export default function AksesRoleCustom({ aksesRole, userRole, canUpdate }: Akse
                     showCreateButton={false}
                     showColumnFilter={true}
                     showDataFilter={false}
+                    showActiveTab={true}
                     activeTab={['General', 'Khusus']}
                     defaultTab='Khusus'
                 />

@@ -17,6 +17,21 @@ return new class extends Migration
                 ->constrained('jadwal_sementaras')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
+            $table->foreignId('mahasiswa_id')
+                ->nullable()
+                ->constrained('mahasiswas')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+            $table->foreignId('dosen_id')
+                ->nullable()
+                ->constrained('dosens')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+            $table->foreignId('admin_id')
+                ->nullable()
+                ->constrained('admins')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
             $table->foreignId('ruang_kelas_id')
                 ->nullable()
                 ->constrained('ruang_kelas')
@@ -26,7 +41,7 @@ return new class extends Migration
             $table->time('jam_mulai_baru');
             $table->time('jam_selesai_baru');
             $table->string('alasan_perubahan');
-            $table->enum('status', ['dikonfirmasi', 'belum_dikonfirmasi'])->default('belum_dikonfirmasi');
+            $table->enum('status', ['pending', 'diterima', 'ditolak'])->default('pending');
             $table->timestamps();
         });
     }

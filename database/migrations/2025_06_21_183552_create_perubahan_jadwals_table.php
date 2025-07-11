@@ -17,16 +17,31 @@ return new class extends Migration
                 ->constrained('jadwals')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
+            $table->foreignId('mahasiswa_id')
+                ->nullable()
+                ->constrained('mahasiswas')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+            $table->foreignId('dosen_id')
+                ->nullable()
+                ->constrained('dosens')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+            $table->foreignId('admin_id')
+                ->nullable()
+                ->constrained('admins')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
             $table->foreignId('ruang_kelas_id')
                 ->nullable()
                 ->constrained('ruang_kelas')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->date('tanggal_perubahan');
+            $table->date('hari_perubahan');
             $table->time('jam_mulai_baru');
             $table->time('jam_selesai_baru');
             $table->string('alasan_perubahan');
-            $table->enum('status', ['dikonfirmasi', 'belum_dikonfirmasi'])->default('belum_dikonfirmasi');
+            $table->enum('status', ['pending', 'diterima', 'ditolak'])->default('pending');
             $table->timestamps();
         });
     }

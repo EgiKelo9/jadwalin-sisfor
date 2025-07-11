@@ -28,4 +28,14 @@ class Mahasiswa extends Model
     {
         return $this->hasMany(PeminjamanKelas::class, 'mahasiswa_id');
     }
+
+    public function perubahanJadwals(): HasMany
+    {
+        return $this->hasMany(PerubahanJadwal::class, 'mahasiswa_id');
+    }
+
+    public function perubahanJadwalSementaras(): HasMany
+    {
+        return $this->hasMany(PerubahanJadwalSementara::class, 'mahasiswa_id');
+    }
 }

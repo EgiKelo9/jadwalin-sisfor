@@ -139,9 +139,9 @@ class AksesRoleController extends Controller
 
         if ($account->mahasiswa) {
             $role = 'mahasiswa';
-        } elseif ($account->$dosen) {
+        } elseif ($account->dosen) {
             $role = 'dosen';
-        } elseif ($account->$admin) {
+        } elseif ($account->admin) {
             $role = 'admin';
         } else {
             $role = "Gak ada cik";
@@ -177,7 +177,7 @@ class AksesRoleController extends Controller
         // $selisihRole = $aksesRole->diff($requestIds);
 
         // Tampilkan hasil
-        dd($selisih->values()->all());
+        // dd($selisih->values()->all());
         // dd($aksesRole,$request);
     }
 }

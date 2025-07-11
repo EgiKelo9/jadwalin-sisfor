@@ -1,13 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DosenController;
+use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\AksesRoleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MahasiswaController;
-use App\Http\Controllers\DosenController;
-use App\Http\Controllers\RuangKelasController;
 use App\Http\Controllers\MataKuliahController;
+use App\Http\Controllers\RuangKelasController;
+use App\Http\Controllers\DaftarJadwalController;
 use App\Http\Controllers\PeminjamanKelasController;
-use App\Http\Controllers\AksesRoleController;
+use App\Http\Controllers\PerubahanJadwalController;
+use App\Http\Controllers\PerubahanDaftarJadwalController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -51,6 +55,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
             });
             Route::resource('peminjaman-kelas', PeminjamanKelasController::class)
                 ->except(['destroy']);
+            Route::resource('daftar-jadwal/ajukan-perubahan-daftar', PerubahanDaftarJadwalController::class);
+            Route::put('daftar-jadwal/ajukan-perubahan-daftar/{ajukan_perubahan_daftar}/status', [PerubahanDaftarJadwalController::class, 'updateStatus'])
+                ->name('ajukan-perubahan-daftar.updateStatus');
+            Route::resource('daftar-jadwal', DaftarJadwalController::class);
+            Route::put('daftar-jadwal/{daftar_jadwal}/status', [DaftarJadwalController::class, 'updateStatus'])
+                ->name('daftar-jadwal.updateStatus');
+            Route::resource('jadwal-perkuliahan/ajukan-perubahan-jadwal', PerubahanJadwalController::class);
+            Route::put('jadwal-perkuliahan/ajukan-perubahan-jadwal/{ajukan_perubahan_daftar}/status', [PerubahanJadwalController::class, 'updateStatus'])
+                ->name('ajukan-perubahan-jadwal.updateStatus');
+            Route::resource('jadwal-perkuliahan', JadwalController::class);
+            Route::put('jadwal-perkuliahan/{daftar_jadwal}/status', [JadwalController::class, 'updateStatus'])
+                ->name('jadwal-perkuliahan.updateStatus');
             Route::resource('peran-dan-akses', AksesRoleController::class)
                 ->except(['create', 'store', 'destroy']);
         });
