@@ -1,136 +1,141 @@
-import { useState } from "react";
-
-const dummySchedule = [
-  {
-    title: "Analisis Desain dan Sistem - C",
-    time: "8:00 - 10:00",
-    room: "Ruang 1.3",
-    mode: "Offline",
-    color: "bg-purple-200",
-  },
-  {
-    title: "Sistem Informasi - D",
-    time: "8:30 - 10:30",
-    room: "Ruang 2.4",
-    mode: "Offline",
-    color: "bg-green-200",
-  },
-  {
-    title: "Pemrograman Berbasis Web - D",
-    time: "10:30 - 12:30",
-    room: "Ruang 2.4",
-    mode: "Offline",
-    color: "bg-yellow-200",
-  },
-  {
-    title: "Pengantar Pemrosesan Data Multimedia - D",
-    time: "17:00 - 18:30",
-    room: "Webex",
-    mode: "Online",
-    color: "bg-cyan-200",
-  },
-];
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 function parseTimeToMinutes(time: string): number {
   const [hour, minute] = time.split(":").map(Number);
   return hour * 60 + minute;
 }
 
-const BASE_START_MIN = 8 * 60; // 08:00 pagi
-const BASE_END_MIN = 19 * 60; // 19:00 malam
+const BASE_START_MIN = 8 * 60;
+const BASE_END_MIN = 19 * 60;
 const PIXELS_PER_MIN = 1.5;
 
-export default function Schedule() {
-  const [selectedMonth, setSelectedMonth] = useState("Mei");
-  const [selectedYear, setSelectedYear] = useState(2025);
-  const selectedDate = 27;
+export default function Schedule({
+  jadwal,
+  selectedDate,
+  selectedMonthYear,
+  setSelectedDate,
+  setSelectedMonthYear
+}: {
+  jadwal?: any[];
+  selectedDate: number;
+  selectedMonthYear: string;
+  setSelectedDate: (date: number) => void;
+  setSelectedMonthYear: (period: string) => void;
+}) {
+  const selectedPeriod = selectedMonthYear;
 
   const months = [
-    "Januari",
-    "Februari",
-    "Maret",
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember",
   ];
 
-  const placedEvents: { start: number; end: number; left: number }[] = [];
+  const periods = [];
+  for (const year of [2024, 2025, 2026]) {
+    for (const month of months) {
+      periods.push(`${month} ${year}`);
+    }
+  }
+
+  const [monthName, yearStr] = selectedPeriod.split(" ");
+  const year = parseInt(yearStr, 10);
+  const monthIndex = months.findIndex((m) => m === monthName);
+  const lastDay = new Date(year, monthIndex + 1, 0).getDate();
+
+  const placedEvents: { start: number; end: number; column: number }[] = [];
   const totalHeight = (BASE_END_MIN - BASE_START_MIN) * PIXELS_PER_MIN;
 
+  const colors = [
+    "bg-blue-200",
+    "bg-green-200",
+    "bg-yellow-200",
+    "bg-purple-200",
+    "bg-pink-200",
+    "bg-indigo-200",
+    "bg-emerald-200",
+  ];
+
   return (
-    <div className="bg-white rounded-lg p-4 w-full border">
-      {/* Bulan & Tahun */}
+    <div className="bg-white rounded-lg p-4 w-full border relative">
+      {/* Dropdown Bulan & Tahun */}
       <div className="flex items-center gap-4 mb-4">
         <select
-          value={selectedMonth}
-          onChange={(e) => setSelectedMonth(e.target.value)}
+          value={selectedPeriod}
+          onChange={(e) => setSelectedMonthYear(e.target.value)}
           className="border rounded px-2 py-1 text-sm"
         >
-          {months.map((m) => (
-            <option key={m} value={m}>
-              {m}
-            </option>
-          ))}
-        </select>
-        <select
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(Number(e.target.value))}
-          className="border rounded px-2 py-1 text-sm"
-        >
-          {[2024, 2025, 2026].map((y) => (
-            <option key={y} value={y}>
-              {y}
+          {periods.map((period) => (
+            <option key={period} value={period}>
+              {period}
             </option>
           ))}
         </select>
       </div>
 
       {/* Baris tanggal */}
-      <div className="flex border-b pb-2 mb-4">
-        {Array.from({ length: 9 }).map((_, idx) => {
-          const date = 24 + idx;
-          return (
-            <div
-              key={date}
-              className={`flex-1 text-center text-sm px-2 py-1 rounded cursor-pointer ${
-                date === selectedDate ? "bg-teal-500 text-white" : "hover:bg-gray-100"
-              }`}
-            >
-              {date}
-            </div>
-          );
-        })}
-      </div>
+      <ScrollArea className="w-[850px] mb-4">
+        <div className="flex w-max space-x-2 px-1 pb-2 border-b">
+          {Array.from({ length: lastDay }).map((_, idx) => {
+            const date = idx + 1;
+            const isActive = date === selectedDate;
+            const dateObj = new Date(year, monthIndex, date);
+            const dayLabel = dateObj.toLocaleDateString("id-ID", {
+              weekday: "short",
+            });
+            const isWeekend = dateObj.getDay() === 0 || dateObj.getDay() === 6;
+
+            return (
+              <div
+                key={date}
+                className={`flex flex-col items-center justify-center cursor-pointer px-3 py-2 rounded min-w-[50px] ${
+                  isActive
+                    ? "bg-teal-500 text-white font-medium"
+                    : `hover:bg-gray-100 text-gray-700 ${isWeekend ? "text-red-500" : ""}`
+                }`}
+                onClick={() => setSelectedDate(date)}
+              >
+                <div className="text-xs">{dayLabel}</div>
+                <div className="text-base">{date}</div>
+              </div>
+            );
+          })}
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
 
       {/* Grid waktu */}
       <div className="flex w-full overflow-auto relative">
         {/* Sidebar jam */}
         <div className="relative w-[80px] flex-shrink-0">
-          {Array.from({ length: (BASE_END_MIN - BASE_START_MIN) / 60 + 1 }).map((_, i) => {
+          {Array.from({
+            length: (BASE_END_MIN - BASE_START_MIN) / 60 + 1,
+          }).map((_, i) => {
             const hour = 8 + i;
             const top = i * 60 * PIXELS_PER_MIN;
             return (
               <div
                 key={hour}
                 className="absolute text-xs text-gray-500"
-                style={{ top: `${top}px`, height: `${60 * PIXELS_PER_MIN}px` }}
+                style={{
+                  top: `${top}px`,
+                  height: `${60 * PIXELS_PER_MIN}px`,
+                }}
               >
-                <div className="flex items-start h-full border-t border-gray-200 pt-1">{hour}:00</div>
+                <div className="flex items-start h-full border-t border-gray-200 pt-1">
+                  {hour}:00
+                </div>
               </div>
             );
           })}
         </div>
 
         {/* Konten jadwal */}
-        <div className="relative flex-1" style={{ height: `${totalHeight}px` }}>
-          {/* Garis bantu */}
-          {Array.from({ length: (BASE_END_MIN - BASE_START_MIN) / 60 + 1 }).map((_, i) => {
+        <div
+          className="relative flex-1"
+          style={{ height: `${totalHeight}px`, minWidth: "400px" }}
+        >
+          {Array.from({
+            length: (BASE_END_MIN - BASE_START_MIN) / 60 + 1,
+          }).map((_, i) => {
             const top = i * 60 * PIXELS_PER_MIN;
             return (
               <div
@@ -141,40 +146,57 @@ export default function Schedule() {
             );
           })}
 
-          {/* Event */}
-          {dummySchedule.map((item, idx) => {
-            const [startStr, endStr] = item.time.split(" - ");
-            const startMin = parseTimeToMinutes(startStr);
-            const endMin = parseTimeToMinutes(endStr);
-            const top = (startMin - BASE_START_MIN) * PIXELS_PER_MIN;
-            const height = (endMin - startMin) * PIXELS_PER_MIN;
+          {jadwal && jadwal.length > 0 ? (
+            jadwal.map((item, idx) => {
+              const startMin = parseTimeToMinutes(item.jam_mulai);
+              const endMin = parseTimeToMinutes(item.jam_selesai);
+              const top = (startMin - BASE_START_MIN) * PIXELS_PER_MIN;
+              const height = (endMin - startMin) * PIXELS_PER_MIN;
 
-            let leftOffset = 0;
-            for (const prev of placedEvents) {
-              const overlap = startMin < prev.end && endMin > prev.start;
-              if (overlap) {
-                leftOffset = Math.max(leftOffset, prev.left + 160);
+              const overlapping = placedEvents.filter(
+                (prev) => startMin < prev.end && endMin > prev.start
+              );
+
+              let column = 0;
+              while (overlapping.some((e) => e.column === column)) {
+                column++;
               }
-            }
-            placedEvents.push({ start: startMin, end: endMin, left: leftOffset });
 
-            return (
-              <div
-                key={idx}
-                className={`absolute rounded-lg shadow-md p-2 text-sm ${item.color}`}
-                style={{
-                  top: `${top}px`,
-                  left: `${leftOffset}px`,
-                  height: `${height}px`,
-                  width: "250px",
-                }}
-              >
-                <div className="font-semibold truncate">{item.title}</div>
-                <div className="text-xs">{item.mode} - {item.room}</div>
-                <div className="text-xs text-gray-600">{item.time}</div>
-              </div>
-            );
-          })}
+              placedEvents.push({ start: startMin, end: endMin, column });
+
+              const leftOffsetPx = column * 250;
+              const colorClass = colors[idx % colors.length];
+
+              return (
+                <div
+                  key={idx}
+                  className={`absolute rounded-lg shadow-md p-2 text-sm ${colorClass}`}
+                  style={{
+                    top: `${top}px`,
+                    left: `${leftOffsetPx}px`,
+                    height: `${height}px`,
+                    width: "fit-content",
+                    minWidth: "120px",
+                    maxWidth: "250px",
+                  }}
+                >
+                  <div className="font-semibold">
+                    {item.jadwal?.mata_kuliah?.nama || "Tanpa Nama"}
+                  </div>
+                  <div className="text-xs">
+                    {item.jadwal?.ruang_kelas?.nama || "-"}
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    {item.jam_mulai} - {item.jam_selesai}
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <div className="text-gray-500 text-sm absolute top-4 left-4">
+              Tidak ada jadwal untuk hari ini.
+            </div>
+          )}
         </div>
       </div>
     </div>
