@@ -47,15 +47,16 @@ class Jadwal extends Model
             'genap' => [2, 4, 6, 8],
             default => [],
         };
+
         $jadwals = self::where('status', 'aktif')
             ->whereHas('mataKuliah', function ($query) use ($semesterNumbers) {
                 $query->whereIn('semester', $semesterNumbers);
             })
             ->get();
+
         $startDate = $startDate ? Carbon::parse($startDate) : Carbon::now();
 
         foreach ($jadwals as $jadwal) {
-            // Get next occurrence of the specific day
             $dayInIndonesian = $jadwal->hari;
             $dayInEnglish = match ($dayInIndonesian) {
                 'senin' => 'monday',
@@ -65,10 +66,39 @@ class Jadwal extends Model
                 'jumat' => 'friday',
             };
 
-            // Find the first occurrence of the target day on or after the start date
+            // Find first occurrence of target day
             $currentDate = clone $startDate;
             while (strtolower($currentDate->englishDayOfWeek) !== $dayInEnglish) {
                 $currentDate->addDay();
+            }
+
+            // Always start at 08:00
+            $start = \Carbon\Carbon::createFromFormat('H:i', $jadwal->jam_mulai);
+            $start->minute = (int) floor($start->minute / 10) * 10;
+            $earliestStart = \Carbon\Carbon::createFromTime(8, 0);
+            if ($start->lessThan($earliestStart)) {
+                $start = $earliestStart->copy();
+            }
+
+            // Calculate duration by SKS
+            $sks = $jadwal->mataKuliah->bobot_sks ?? 1;
+            $durationMinutes = $sks * 50;
+
+            // Compute end time
+            $end = $start->copy()->addMinutes($durationMinutes);
+
+            // If end exceeds 16:00, cap it
+            $latestEnd = \Carbon\Carbon::createFromTime(16, 0);
+            if ($end->greaterThan($latestEnd)) {
+                $end = $latestEnd->copy();
+            }
+
+            // Round start minute to nearest 10
+            $start->minute = (int) floor($start->minute / 10) * 10;
+
+            // Validate start < end
+            if ($start->greaterThanOrEqualTo($end)) {
+                continue;
             }
 
             for ($i = 0; $i < $count; $i++) {
@@ -80,8 +110,8 @@ class Jadwal extends Model
                     'jadwal_id' => $jadwal->id,
                     'ruang_kelas_id' => $jadwal->ruang_kelas_id,
                     'tanggal' => $currentDate->format('Y-m-d'),
-                    'jam_mulai' => $jadwal->jam_mulai,
-                    'jam_selesai' => $jadwal->jam_selesai,
+                    'jam_mulai' => $start->format('H:i'),
+                    'jam_selesai' => $end->format('H:i'),
                 ]);
             }
         }
