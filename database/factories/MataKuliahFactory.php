@@ -2,6 +2,7 @@
 namespace Database\Factories;
 use App\Models\Dosen;
 use App\Models\Jadwal;
+use App\Models\MataKuliah;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MataKuliahFactory extends Factory
@@ -10,7 +11,7 @@ class MataKuliahFactory extends Factory
     {
         return [
             'kode' => $this->faker->unique()->bothify('MK-######'),
-            'nama' => ucwords(implode(' ', $this->faker->words(4))),
+            'nama' => ucwords($this->faker->words(4, true)),
             'bobot_sks' => $this->faker->numberBetween(1, 4),
             'kapasitas' => $this->faker->numberBetween(20, 60),
             'semester' => $this->faker->numberBetween(1, 8),
@@ -31,7 +32,7 @@ class MataKuliahFactory extends Factory
         $classCount = min($classCount, 6);
         
         $baseKode = $this->faker->unique()->bothify('MK-######');
-        $baseName = ucwords(implode(' ', $this->faker->words(2)));
+        $baseName = ucwords(implode(' ', $this->faker->words(4, false)));
         $baseProperties = [
             'bobot_sks' => $this->faker->numberBetween(1, 4),
             'kapasitas' => $this->faker->numberBetween(20, 60),
@@ -45,14 +46,12 @@ class MataKuliahFactory extends Factory
         
         for ($i = 0; $i < $classCount; $i++) {
             $classLetter = $classes[$i];
-            
-            // Generate incremental kode (increment by 1 from base)
             $currentKode = $i === 0 ? $baseKode : $this->incrementKode($baseKode, $i);
             
-            $mataKuliah = \App\Models\MataKuliah::create(array_merge($baseProperties, [
+            $mataKuliah = MataKuliah::create(array_merge($baseProperties, [
                 'kode' => $currentKode,
                 'nama' => $baseName . ' - ' . $classLetter,
-                'dosen_id' => Dosen::inRandomOrder()->first()->id ?? null, // May differ between classes
+                'dosen_id' => Dosen::inRandomOrder()->first()->id ?? null,
             ]));
             
             $createdClasses->push($mataKuliah);
@@ -65,7 +64,7 @@ class MataKuliahFactory extends Factory
     {        
         return $this->state(function (array $attributes) {
             return [
-                'nama' => $this->faker->words(3) . ' - A',
+                'nama' => $this->faker->words(3, true) . ' - A',
                 'bobot_sks' => 2,
                 'jenis' => 'wajib',
                 'kapasitas' => $this->faker->numberBetween(40, 80),
