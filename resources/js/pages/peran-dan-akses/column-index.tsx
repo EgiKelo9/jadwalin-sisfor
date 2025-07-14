@@ -5,7 +5,6 @@ import { createTableColumns, BaseEntity } from "@/components/ui/columns"
 
 export type AksesRole = {
     id: number
-    nama_role: string
     akses: string
     deskripsi: string
 } & BaseEntity
@@ -13,12 +12,6 @@ export type AksesRole = {
 export function createAksesRoleColumns(userRole?: string, canUpdate?: boolean): ColumnDef<AksesRole>[] {
     return createTableColumns<AksesRole>({
         dataColumns: [
-            {
-                key: "nama_role",
-                header: "Peran",
-                sortable: true,
-                type: "text",
-            },
             {
                 key: "akses",
                 header: "Nama Akses",

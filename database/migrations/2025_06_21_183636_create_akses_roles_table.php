@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('akses_roles', function (Blueprint $table) {
             $table->id();
-            $table->enum('nama_role', ['mahasiswa', 'dosen', 'admin'])->default('mahasiswa');
+            // $table->enum('nama_role', ['mahasiswa', 'dosen', 'admin'])->default('mahasiswa');
             $table->string('akses');
             $table->text('deskripsi')->nullable();
             $table->timestamps();

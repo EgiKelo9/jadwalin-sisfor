@@ -58,10 +58,10 @@ type AksesRoleData = {
 export default function LihatAksesRole({ account, aksesRoles }: { account: Account, aksesRoles: AksesRoleData[] }) {
     return (
         <AppLayout breadcrumbs={breadcrumbs} userRole='admin'>
-            <Head title="Lihat Ruang Kelas" />
+            <Head title="Lihat Peran dan Akses" />
             <div className="flex h-full w-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <h1 className='text-xl py-2 font-semibold'>Lihat Ruang Kelas</h1>
+                    <h1 className='text-xl py-2 font-semibold'>Lihat Peran dan Akses</h1>
                     <Button variant="outline" asChild>
                         <Link href={`/admin/peran-dan-akses/${account.id}/ubah`}><Pencil />Ubah</Link>
                     </Button>
@@ -85,10 +85,10 @@ export default function LihatAksesRole({ account, aksesRoles }: { account: Accou
                         />
                     </div>
                     <div className='grid gap-4 mt-2 col-span-2'>
-                        <Label htmlFor='mahasiswa'>Akses Mahasiswa</Label>
-                        {aksesRoles.filter(role => role.nama_role === 'mahasiswa').length > 0 ? (
+                        <Label htmlFor='mahasiswa'>Akses Dimiliki</Label>
+                        {aksesRoles.length > 0 ? (
                             <div className='grid grid-cols-2 gap-4 p-4 border border-secondary rounded-lg'>
-                                {aksesRoles.filter(role => role.nama_role === 'mahasiswa').map((role) => (
+                                {aksesRoles.map((role) => (
                                     <div key={role.id} className='flex items-center justify-start gap-2 col-span-1 w-full'>
                                         <Switch
                                             className="mr-1"
@@ -101,51 +101,7 @@ export default function LihatAksesRole({ account, aksesRoles }: { account: Accou
                             </div>
                         ) : (
                             <div className='p-4 border border-secondary rounded-lg text-center text-gray-500'>
-                                Tidak ada akses mahasiswa
-                            </div>
-                        )}
-                    </div>
-
-                    <div className='grid gap-4 mt-2 col-span-2'>
-                        <Label htmlFor='dosen'>Akses Dosen</Label>
-                        {aksesRoles.filter(role => role.nama_role === 'dosen').length > 0 ? (
-                            <div className='grid grid-cols-2 gap-4 p-4 border border-secondary rounded-lg'>
-                                {aksesRoles.filter(role => role.nama_role === 'dosen').map((role, index) => (
-                                    <div key={role.id} className='flex items-center justify-start gap-2 col-span-1 w-full'>
-                                        <Switch
-                                            className="mr-1"
-                                            disabled
-                                            checked={role.pivot?.status === true}
-                                        />
-                                        <Label className="text-sm">{role.akses}</Label>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className='p-4 border border-secondary rounded-lg text-center text-gray-500'>
-                                Tidak ada akses dosen
-                            </div>
-                        )}
-                    </div>
-
-                    <div className='grid gap-4 mt-2 col-span-2'>
-                        <Label htmlFor='admin'>Akses Admin</Label>
-                        {aksesRoles.filter(role => role.nama_role === 'admin').length > 0 ? (
-                            <div className='grid grid-cols-2 gap-4 p-4 border border-secondary rounded-lg'>
-                                {aksesRoles.filter(role => role.nama_role === 'admin').map((role, index) => (
-                                    <div key={role.id} className='flex items-center justify-start gap-2 col-span-1 w-full'>
-                                        <Switch
-                                            className="mr-1"
-                                            disabled
-                                            checked={role.pivot?.status === true}
-                                        />
-                                        <Label className="text-sm">{role.akses}</Label>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className='p-4 border border-secondary rounded-lg text-center text-gray-500'>
-                                Tidak ada akses admin
+                                Tidak ada akses yang dimiliki
                             </div>
                         )}
                     </div>

@@ -30,36 +30,51 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
-type DaftarJadwalForm = {
+type JadwalForm = {
     id: number
-    mata_kuliah_id: number
+    jadwal_id: number
     ruang_kelas_id: number
-    hari: "senin" | "selasa" | "rabu" | "kamis" | "jumat"
+    tanggal: string | Date
     jam_mulai: string
     jam_selesai: string
-    status: "aktif" | "nonaktif"
     _method?: string;
 };
 
-type DaftarJadwalData = {
+type JadwalData = {
     id: number
-    mata_kuliah_id: number
+    jadwal_id: number
     ruang_kelas_id: number
-    hari: "senin" | "selasa" | "rabu" | "kamis" | "jumat"
+    tanggal: Date | string
     jam_mulai: string
     jam_selesai: string
-    mata_kuliah: {
+    jadwal: {
         id: number
-        kode: string
-        nama: string
-        bobot_sks: number
-        kapasitas: number
-        semester: number
-        status: "aktif" | "nonaktif"
-        jenis: "wajib" | "pilihan"
-        dosen: {
+        mata_kuliah_id: number
+        ruang_kelas_id: number
+        hari: "senin" | "selasa" | "rabu" | "kamis" | "jumat"
+        jam_mulai: string
+        jam_selesai: string
+        mata_kuliah: {
+            id: number
+            kode: string
+            nama: string
+            bobot_sks: number
+            kapasitas: number
+            semester: number
+            status: "aktif" | "nonaktif"
+            jenis: "wajib" | "pilihan"
+            dosen: {
+                id: number
+                nama: string
+            }
+        }
+        ruang_kelas: {
             id: number
             nama: string
+            gedung: string
+            lantai: number
+            kapasitas: number
+            status: "layak" | "tidak_layak" | "perbaikan"
         }
     }
     ruang_kelas: {
@@ -70,23 +85,7 @@ type DaftarJadwalData = {
         kapasitas: number
         status: "layak" | "tidak_layak" | "perbaikan"
     }
-    status: "aktif" | "nonaktif"
 }
-
-type MataKuliahData = {
-    id: number
-    kode: string
-    nama: string
-    bobot_sks: number
-    kapasitas: number
-    semester: number
-    status: "aktif" | "nonaktif"
-    jenis: "wajib" | "pilihan"
-    dosen: {
-        id: number
-        nama: string
-    }
-};
 
 type RuangKelasData = {
     id: number;
@@ -97,30 +96,29 @@ type RuangKelasData = {
     status: 'layak' | 'tidak_layak' | 'perbaikan';
 };
 
-export default function UbahDaftarJadwal({ daftarJadwal, mataKuliah, ruangKelas, userRole, canDelete }: { daftarJadwal: DaftarJadwalData, mataKuliah: MataKuliahData, ruangKelas: RuangKelasData[], userRole: string, canDelete?: boolean }) {
+export default function UbahJadwal({ jadwal, ruangKelas, userRole, canDelete }: { jadwal: JadwalData, ruangKelas: RuangKelasData[], userRole: string, canDelete?: boolean }) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: userRole.charAt(0).toUpperCase() + userRole.slice(1),
             href: `/${userRole}/beranda`,
         },
         {
-            title: 'Daftar Jadwal',
-            href: `/${userRole}/daftar-jadwal`,
+            title: 'Jadwal Perkuliahan',
+            href: `/${userRole}/jadwal-perkuliahan`,
         },
         {
             title: 'Ubah',
-            href: `/${userRole}/daftar-jadwal/${daftarJadwal.id}/ubah`,
+            href: `/${userRole}/jadwal-perkuliahan/${jadwal.id}/ubah`,
         },
     ];
 
-    const { data, setData, post, processing, errors } = useForm<DaftarJadwalForm>({
-        id: daftarJadwal.id,
-        mata_kuliah_id: daftarJadwal.mata_kuliah_id,
-        ruang_kelas_id: daftarJadwal.ruang_kelas_id,
-        hari: daftarJadwal.hari,
-        jam_mulai: daftarJadwal.jam_mulai,
-        jam_selesai: daftarJadwal.jam_selesai,
-        status: daftarJadwal.status,
+    const { data, setData, post, processing, errors } = useForm<JadwalForm>({
+        id: jadwal.id,
+        jadwal_id: jadwal.jadwal_id,
+        ruang_kelas_id: jadwal.ruang_kelas_id,
+        tanggal: jadwal.tanggal,
+        jam_mulai: jadwal.jam_mulai,
+        jam_selesai: jadwal.jam_selesai,
         _method: 'PUT',
     });
 
@@ -133,12 +131,12 @@ export default function UbahDaftarJadwal({ daftarJadwal, mataKuliah, ruangKelas,
     const handleDelete: FormEventHandler = (e) => {
         e.preventDefault();
         setDeleting(true);
-        router.delete(route(`${userRole}.daftar-jadwal.destroy`, daftarJadwal.id), {
+        router.delete(route(`${userRole}.jadwal-perkuliahan.destroy`, jadwal.id), {
             onSuccess: () => {
-                router.visit(route(`${userRole}.daftar-jadwal.index`));
+                router.visit(route(`${userRole}.jadwal-perkuliahan.index`));
             },
             onError: (error) => {
-                console.error('Gagal menghapus daftar jadwal perkuliahan:', error);
+                console.error('Gagal menghapus jadwal perkuliahan:', error);
             },
             onFinish: () => {
                 setDeleting(false);
@@ -149,14 +147,14 @@ export default function UbahDaftarJadwal({ daftarJadwal, mataKuliah, ruangKelas,
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
         console.log("Submitting data:", data);
-        post(route(`${userRole}.daftar-jadwal.update`, daftarJadwal.id), {
+        post(route(`${userRole}.jadwal-perkuliahan.update`, jadwal.id), {
             forceFormData: true,
             preserveState: true,
             preserveScroll: true,
             onSuccess: () => {
                 console.log('Update berhasil');
-                sessionStorage.setItem('success', 'Daftar jadwal perkuliahan berhasil diperbarui.');
-                router.visit(route(`${userRole}.daftar-jadwal.edit`, daftarJadwal.id));
+                sessionStorage.setItem('success', 'Jadwal perkuliahan berhasil diperbarui.');
+                router.visit(route(`${userRole}.jadwal-perkuliahan.edit`, jadwal.id));
             },
             onError: (errors) => {
                 console.error('Update gagal:', errors);
@@ -169,14 +167,14 @@ export default function UbahDaftarJadwal({ daftarJadwal, mataKuliah, ruangKelas,
 
     return (
         <AppLayout breadcrumbs={breadcrumbs} userRole={userRole}>
-            <Head title="Ubah Daftar Jadwal" />
+            <Head title="Ubah Jadwal Perkuliahan" />
             <ToasterComponent />
             <form className="flex h-full w-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto" onSubmit={handleSubmit}>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <h1 className='text-xl py-2 font-semibold'>Ubah Daftar Jadwal</h1>
+                    <h1 className='text-xl py-2 font-semibold'>Ubah Jadwal Perkuliahan</h1>
                     <div className="flex items-center justify-center max-w-sm mb-2 gap-4">
                         <Button variant="outline" asChild>
-                            <Link href={`/${userRole}/jadwal-perkuliahan/daftar-jadwal/${daftarJadwal.id}`}><Eye />Lihat</Link>
+                            <Link href={`/${userRole}/jadwal-perkuliahan/${jadwal.id}`}><Eye />Lihat</Link>
                         </Button>
                         {canDelete && (
                             <AlertDialog>
@@ -185,9 +183,9 @@ export default function UbahDaftarJadwal({ daftarJadwal, mataKuliah, ruangKelas,
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                     <AlertDialogHeader>
-                                        <AlertDialogTitle>Apakah Anda yakin ingin menghapus daftar jadwal ini?</AlertDialogTitle>
+                                        <AlertDialogTitle>Apakah Anda yakin ingin menghapus jadwal ini?</AlertDialogTitle>
                                         <AlertDialogDescription>
-                                            Aksi ini tidak dapat dibatalkan. Daftar jadwal ini akan dihapus secara permanen
+                                            Aksi ini tidak dapat dibatalkan. Jadwal ini akan dihapus secara permanen
                                             dan tidak dapat dipulihkan lagi.
                                         </AlertDialogDescription>
                                     </AlertDialogHeader>
@@ -215,7 +213,7 @@ export default function UbahDaftarJadwal({ daftarJadwal, mataKuliah, ruangKelas,
                             id='mata_kuliah.nama'
                             type='text'
                             tabIndex={1}
-                            value={daftarJadwal.mata_kuliah.nama}
+                            value={jadwal.jadwal.mata_kuliah.nama}
                             disabled
                             className="w-full"
                         />
@@ -226,7 +224,7 @@ export default function UbahDaftarJadwal({ daftarJadwal, mataKuliah, ruangKelas,
                             id='mata_kuliah.kode'
                             type='text'
                             tabIndex={2}
-                            value={daftarJadwal.mata_kuliah.kode}
+                            value={jadwal.jadwal.mata_kuliah.kode}
                             disabled
                             className="w-full"
                         />
@@ -276,32 +274,28 @@ export default function UbahDaftarJadwal({ daftarJadwal, mataKuliah, ruangKelas,
                             id='dosen_id'
                             type='text'
                             tabIndex={4}
-                            value={mataKuliah.dosen.nama}
+                            value={jadwal.jadwal.mata_kuliah.dosen.nama}
                             disabled
                             className="w-full capitalize"
                         />
                     </div>
                     <div className='grid gap-4 mt-2 col-span-2'>
-                        <Label htmlFor='hari'>Hari Perkuliahan</Label>
-                        <Select value={String(data.hari)} onValueChange={(value) => setData('hari', value as "senin" | "selasa" | "rabu" | "kamis" | "jumat")}>
-                            <SelectTrigger
-                                id='hari'
-                                autoFocus
-                                tabIndex={5}
-                                disabled={processing}
-                                className="w-full"
-                            >
-                                <SelectValue placeholder={String(data.hari)} defaultValue={data.hari} />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="senin">Hari Senin</SelectItem>
-                                <SelectItem value="selasa">Hari Selasa</SelectItem>
-                                <SelectItem value="rabu">Hari Rabu</SelectItem>
-                                <SelectItem value="kamis">Hari Kamis</SelectItem>
-                                <SelectItem value="jumat">Hari Jumat</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <InputError message={errors.hari} />
+                        <Label htmlFor='tanggal'>Tanggal Perkuliahan
+                            <span className='text-red-500'>*</span>
+                        </Label>
+                        <Input
+                            id='tanggal'
+                            type='date'
+                            required
+                            autoFocus
+                            tabIndex={5}
+                            value={String(data.tanggal)}
+                            onChange={(e) => setData('tanggal', e.target.value)}
+                            disabled={processing}
+                            placeholder='Masukkan Tanggal Perkuliahan'
+                            className="w-full"
+                        />
+                        <InputError message={errors.tanggal} />
                     </div>
                     <div className='relative grid gap-4 mt-2 col-span-1'>
                         <Label htmlFor='jam_mulai'>Waktu Mulai

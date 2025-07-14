@@ -5,15 +5,7 @@ import { Head, Link } from '@inertiajs/react';
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button, buttonVariants } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Pencil, Download } from 'lucide-react';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { cn } from '@/lib/utils';
 
 type DaftarJadwalData = {
     id: number

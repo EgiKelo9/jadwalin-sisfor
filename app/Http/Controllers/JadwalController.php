@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Jadwal;
+use App\Models\RuangKelas;
 use Illuminate\Http\Request;
 use App\Models\JadwalSementara;
 use Illuminate\Support\Facades\DB;
@@ -115,7 +116,17 @@ class JadwalController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $user = User::find(auth('web')->user()->id);
+        if (!$user->hasAccess('Lihat Jadwal Perkuliahan')) {
+            return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk melihat jadwal perkuliahan.']);
+        }
+        $jadwal = JadwalSementara::with(['jadwal.mataKuliah.dosen', 'jadwal.ruangKelas', 'ruangKelas'])->findOrFail($id);
+        return Inertia::render('jadwal/show', [
+            'jadwal' => $jadwal,
+            'userRole' => $user->role,
+            'user' => $this->getReturnedUser(),
+            'canUpdate' => $user->hasAccess('Ubah Jadwal Perkuliahan'),
+        ]);
     }
 
     /**
@@ -123,7 +134,19 @@ class JadwalController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = User::find(auth('web')->user()->id);
+        if (!$user->hasAccess('Ubah Jadwal Perkuliahan')) {
+            return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk mengubah jadwal perkuliahan.']);
+        }
+        $jadwal = JadwalSementara::with(['jadwal.mataKuliah.dosen', 'jadwal.ruangKelas', 'ruangKelas'])->findOrFail($id);
+        $ruangKelas = RuangKelas::where('status', 'layak')->orderBy('nama')->get();
+        return Inertia::render('jadwal/edit', [
+            'jadwal' => $jadwal,
+            'ruangKelas' => $ruangKelas,
+            'userRole' => $user->role,
+            'user' => $this->getReturnedUser(),
+            'canDelete' => $user->hasAccess('Hapus Jadwal Perkuliahan'),
+        ]);
     }
 
     /**
@@ -131,7 +154,38 @@ class JadwalController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::find(auth('web')->user()->id);
+        if (!$user->hasAccess('Ubah Jadwal Perkuliahan')) {
+            return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk mengubah jadwal perkuliahan.']);
+        }
+        $request->validate([
+            'tanggal' => 'required|date',
+            'jam_mulai' => 'required|date_format:H:i',
+            'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
+            'jadwal_id' => 'required|exists:jadwals,id',
+            'ruang_kelas_id' => 'required|exists:ruang_kelas,id',
+        ], [
+            'tanggal.required' => 'Tanggal wajib diisi.',
+            'jam_mulai.required' => 'Jam mulai wajib diisi.',
+            'jam_selesai.required' => 'Jam selesai wajib diisi.',
+            'jadwal_id.required' => 'Mata kuliah wajib dipilih.',
+            'ruang_kelas_id.required' => 'Ruang kelas wajib dipilih.',
+        ]);
+
+        try {
+            $jadwal = JadwalSementara::findOrFail($id);
+            $jadwal->update([
+                'tanggal' => $request->tanggal,
+                'jam_mulai' => $request->jam_mulai,
+                'jam_selesai' => $request->jam_selesai,
+                'jadwal_id' => $request->jadwal_id,
+                'ruang_kelas_id' => $request->ruang_kelas_id,
+            ]);
+            session()->flash('success', 'Jadwal perkuliahan berhasil diperbarui.');
+            return redirect()->route("{$user->role}.jadwal-perkuliahan.edit", $jadwal->id)->with('success', 'Daftar jadwal perkuliahan berhasil diperbarui.');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Gagal memperbarui jadwal perkuliahan: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -139,6 +193,17 @@ class JadwalController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::find(auth('web')->user()->id);
+        if (!$user->hasAccess('Hapus Jadwal Perkuliahan')) {
+            return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk menghapus jadwal perkuliahan.']);
+        }
+        try {
+            $jadwal = JadwalSementara::findOrFail($id);
+            $jadwal->delete();
+            session()->flash('success', 'Jadwal perkuliahan berhasil dihapus.');
+            return redirect()->route("{$user->role}.jadwal-perkuliahan.index")->with('success', 'Jadwal perkuliahan berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Gagal menghapus jadwal perkuliahan: ' . $e->getMessage()]);
+        }
     }
 }
