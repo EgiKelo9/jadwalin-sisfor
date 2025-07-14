@@ -1,0 +1,722 @@
+[
+  {
+    "id": 1,
+    "mata_kuliah_id": 27,
+    "ruang_kelas_id": 13,
+    "hari": "Senin",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 2,
+    "mata_kuliah_id": 30,
+    "ruang_kelas_id": 9,
+    "hari": "Senin",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 3,
+    "mata_kuliah_id": 41,
+    "ruang_kelas_id": 10,
+    "hari": "Senin",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 4,
+    "mata_kuliah_id": 67,
+    "ruang_kelas_id": 5,
+    "hari": "Senin",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 5,
+    "mata_kuliah_id": 80,
+    "ruang_kelas_id": 3,
+    "hari": "Senin",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 6,
+    "mata_kuliah_id": 94,
+    "ruang_kelas_id": 7,
+    "hari": "Senin",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 7,
+    "mata_kuliah_id": 23,
+    "ruang_kelas_id": 4,
+    "hari": "Senin",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 8,
+    "mata_kuliah_id": 40,
+    "ruang_kelas_id": 5,
+    "hari": "Senin",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 9,
+    "mata_kuliah_id": 78,
+    "ruang_kelas_id": 10,
+    "hari": "Senin",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 10,
+    "mata_kuliah_id": 85,
+    "ruang_kelas_id": 17,
+    "hari": "Senin",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 11,
+    "mata_kuliah_id": 87,
+    "ruang_kelas_id": 11,
+    "hari": "Senin",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 12,
+    "mata_kuliah_id": 92,
+    "ruang_kelas_id": 9,
+    "hari": "Senin",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 13,
+    "mata_kuliah_id": 21,
+    "ruang_kelas_id": 10,
+    "hari": "Senin",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 14,
+    "mata_kuliah_id": 29,
+    "ruang_kelas_id": 14,
+    "hari": "Senin",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 15,
+    "mata_kuliah_id": 31,
+    "ruang_kelas_id": 11,
+    "hari": "Senin",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 16,
+    "mata_kuliah_id": 70,
+    "ruang_kelas_id": 12,
+    "hari": "Senin",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 17,
+    "mata_kuliah_id": 72,
+    "ruang_kelas_id": 16,
+    "hari": "Senin",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 18,
+    "mata_kuliah_id": 98,
+    "ruang_kelas_id": 15,
+    "hari": "Senin",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 19,
+    "mata_kuliah_id": 24,
+    "ruang_kelas_id": 10,
+    "hari": "Selasa",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 20,
+    "mata_kuliah_id": 71,
+    "ruang_kelas_id": 6,
+    "hari": "Selasa",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 21,
+    "mata_kuliah_id": 74,
+    "ruang_kelas_id": 8,
+    "hari": "Selasa",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 22,
+    "mata_kuliah_id": 76,
+    "ruang_kelas_id": 16,
+    "hari": "Selasa",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 23,
+    "mata_kuliah_id": 79,
+    "ruang_kelas_id": 11,
+    "hari": "Selasa",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 24,
+    "mata_kuliah_id": 81,
+    "ruang_kelas_id": 13,
+    "hari": "Selasa",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 25,
+    "mata_kuliah_id": 26,
+    "ruang_kelas_id": 10,
+    "hari": "Selasa",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 26,
+    "mata_kuliah_id": 42,
+    "ruang_kelas_id": 4,
+    "hari": "Selasa",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 27,
+    "mata_kuliah_id": 69,
+    "ruang_kelas_id": 8,
+    "hari": "Selasa",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 28,
+    "mata_kuliah_id": 73,
+    "ruang_kelas_id": 6,
+    "hari": "Selasa",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 29,
+    "mata_kuliah_id": 82,
+    "ruang_kelas_id": 3,
+    "hari": "Selasa",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 30,
+    "mata_kuliah_id": 89,
+    "ruang_kelas_id": 16,
+    "hari": "Selasa",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 31,
+    "mata_kuliah_id": 28,
+    "ruang_kelas_id": 10,
+    "hari": "Selasa",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 32,
+    "mata_kuliah_id": 63,
+    "ruang_kelas_id": 13,
+    "hari": "Selasa",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 33,
+    "mata_kuliah_id": 83,
+    "ruang_kelas_id": 14,
+    "hari": "Selasa",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 34,
+    "mata_kuliah_id": 86,
+    "ruang_kelas_id": 2,
+    "hari": "Selasa",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 35,
+    "mata_kuliah_id": 96,
+    "ruang_kelas_id": 1,
+    "hari": "Selasa",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 36,
+    "mata_kuliah_id": 97,
+    "ruang_kelas_id": 9,
+    "hari": "Selasa",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 37,
+    "mata_kuliah_id": 25,
+    "ruang_kelas_id": 16,
+    "hari": "Rabu",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 38,
+    "mata_kuliah_id": 44,
+    "ruang_kelas_id": 17,
+    "hari": "Rabu",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 39,
+    "mata_kuliah_id": 77,
+    "ruang_kelas_id": 6,
+    "hari": "Rabu",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 40,
+    "mata_kuliah_id": 84,
+    "ruang_kelas_id": 3,
+    "hari": "Rabu",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 41,
+    "mata_kuliah_id": 88,
+    "ruang_kelas_id": 14,
+    "hari": "Rabu",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 42,
+    "mata_kuliah_id": 93,
+    "ruang_kelas_id": 8,
+    "hari": "Rabu",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 43,
+    "mata_kuliah_id": 22,
+    "ruang_kelas_id": 9,
+    "hari": "Rabu",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 44,
+    "mata_kuliah_id": 59,
+    "ruang_kelas_id": 16,
+    "hari": "Rabu",
+    "jam_mulai": "10:30",
+    "jam_selesai": "12:10"
+  },
+  {
+    "id": 45,
+    "mata_kuliah_id": 66,
+    "ruang_kelas_id": 4,
+    "hari": "Rabu",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 46,
+    "mata_kuliah_id": 68,
+    "ruang_kelas_id": 15,
+    "hari": "Rabu",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 47,
+    "mata_kuliah_id": 75,
+    "ruang_kelas_id": 12,
+    "hari": "Rabu",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 48,
+    "mata_kuliah_id": 91,
+    "ruang_kelas_id": 17,
+    "hari": "Rabu",
+    "jam_mulai": "10:30",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 49,
+    "mata_kuliah_id": 3,
+    "ruang_kelas_id": 14,
+    "hari": "Rabu",
+    "jam_mulai": "12:10",
+    "jam_selesai": "13:50"
+  },
+  {
+    "id": 50,
+    "mata_kuliah_id": 32,
+    "ruang_kelas_id": 17,
+    "hari": "Rabu",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 51,
+    "mata_kuliah_id": 39,
+    "ruang_kelas_id": 15,
+    "hari": "Rabu",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 52,
+    "mata_kuliah_id": 43,
+    "ruang_kelas_id": 9,
+    "hari": "Rabu",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 53,
+    "mata_kuliah_id": 64,
+    "ruang_kelas_id": 11,
+    "hari": "Rabu",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 54,
+    "mata_kuliah_id": 90,
+    "ruang_kelas_id": 5,
+    "hari": "Rabu",
+    "jam_mulai": "13:00",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 55,
+    "mata_kuliah_id": 35,
+    "ruang_kelas_id": 14,
+    "hari": "Rabu",
+    "jam_mulai": "13:50",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 56,
+    "mata_kuliah_id": 2,
+    "ruang_kelas_id": 9,
+    "hari": "Kamis",
+    "jam_mulai": "08:00",
+    "jam_selesai": "09:40"
+  },
+  {
+    "id": 57,
+    "mata_kuliah_id": 20,
+    "ruang_kelas_id": 15,
+    "hari": "Kamis",
+    "jam_mulai": "08:00",
+    "jam_selesai": "09:40"
+  },
+  {
+    "id": 58,
+    "mata_kuliah_id": 36,
+    "ruang_kelas_id": 7,
+    "hari": "Kamis",
+    "jam_mulai": "08:00",
+    "jam_selesai": "09:40"
+  },
+  {
+    "id": 59,
+    "mata_kuliah_id": 49,
+    "ruang_kelas_id": 16,
+    "hari": "Kamis",
+    "jam_mulai": "08:00",
+    "jam_selesai": "09:40"
+  },
+  {
+    "id": 60,
+    "mata_kuliah_id": 51,
+    "ruang_kelas_id": 14,
+    "hari": "Kamis",
+    "jam_mulai": "08:00",
+    "jam_selesai": "09:40"
+  },
+  {
+    "id": 61,
+    "mata_kuliah_id": 65,
+    "ruang_kelas_id": 5,
+    "hari": "Kamis",
+    "jam_mulai": "08:00",
+    "jam_selesai": "10:30"
+  },
+  {
+    "id": 62,
+    "mata_kuliah_id": 4,
+    "ruang_kelas_id": 17,
+    "hari": "Kamis",
+    "jam_mulai": "09:40",
+    "jam_selesai": "11:20"
+  },
+  {
+    "id": 63,
+    "mata_kuliah_id": 19,
+    "ruang_kelas_id": 9,
+    "hari": "Kamis",
+    "jam_mulai": "09:40",
+    "jam_selesai": "11:20"
+  },
+  {
+    "id": 64,
+    "mata_kuliah_id": 33,
+    "ruang_kelas_id": 3,
+    "hari": "Kamis",
+    "jam_mulai": "09:40",
+    "jam_selesai": "11:20"
+  },
+  {
+    "id": 65,
+    "mata_kuliah_id": 50,
+    "ruang_kelas_id": 7,
+    "hari": "Kamis",
+    "jam_mulai": "09:40",
+    "jam_selesai": "11:20"
+  },
+  {
+    "id": 66,
+    "mata_kuliah_id": 58,
+    "ruang_kelas_id": 15,
+    "hari": "Kamis",
+    "jam_mulai": "09:40",
+    "jam_selesai": "11:20"
+  },
+  {
+    "id": 67,
+    "mata_kuliah_id": 5,
+    "ruang_kelas_id": 14,
+    "hari": "Kamis",
+    "jam_mulai": "11:20",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 68,
+    "mata_kuliah_id": 38,
+    "ruang_kelas_id": 8,
+    "hari": "Kamis",
+    "jam_mulai": "11:20",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 69,
+    "mata_kuliah_id": 45,
+    "ruang_kelas_id": 11,
+    "hari": "Kamis",
+    "jam_mulai": "11:20",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 70,
+    "mata_kuliah_id": 52,
+    "ruang_kelas_id": 17,
+    "hari": "Kamis",
+    "jam_mulai": "11:20",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 71,
+    "mata_kuliah_id": 60,
+    "ruang_kelas_id": 7,
+    "hari": "Kamis",
+    "jam_mulai": "11:20",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 72,
+    "mata_kuliah_id": 95,
+    "ruang_kelas_id": 3,
+    "hari": "Kamis",
+    "jam_mulai": "11:20",
+    "jam_selesai": "13:50"
+  },
+  {
+    "id": 73,
+    "mata_kuliah_id": 15,
+    "ruang_kelas_id": 12,
+    "hari": "Kamis",
+    "jam_mulai": "13:00",
+    "jam_selesai": "14:40"
+  },
+  {
+    "id": 74,
+    "mata_kuliah_id": 37,
+    "ruang_kelas_id": 13,
+    "hari": "Kamis",
+    "jam_mulai": "13:00",
+    "jam_selesai": "14:40"
+  },
+  {
+    "id": 75,
+    "mata_kuliah_id": 48,
+    "ruang_kelas_id": 4,
+    "hari": "Kamis",
+    "jam_mulai": "13:00",
+    "jam_selesai": "14:40"
+  },
+  {
+    "id": 76,
+    "mata_kuliah_id": 62,
+    "ruang_kelas_id": 16,
+    "hari": "Kamis",
+    "jam_mulai": "13:00",
+    "jam_selesai": "14:40"
+  },
+  {
+    "id": 77,
+    "mata_kuliah_id": 53,
+    "ruang_kelas_id": 3,
+    "hari": "Kamis",
+    "jam_mulai": "13:50",
+    "jam_selesai": "15:30"
+  },
+  {
+    "id": 78,
+    "mata_kuliah_id": 18,
+    "ruang_kelas_id": 12,
+    "hari": "Jumat",
+    "jam_mulai": "08:00",
+    "jam_selesai": "09:40"
+  },
+  {
+    "id": 79,
+    "mata_kuliah_id": 34,
+    "ruang_kelas_id": 8,
+    "hari": "Jumat",
+    "jam_mulai": "08:00",
+    "jam_selesai": "09:40"
+  },
+  {
+    "id": 80,
+    "mata_kuliah_id": 56,
+    "ruang_kelas_id": 13,
+    "hari": "Jumat",
+    "jam_mulai": "08:00",
+    "jam_selesai": "09:40"
+  },
+  {
+    "id": 81,
+    "mata_kuliah_id": 57,
+    "ruang_kelas_id": 15,
+    "hari": "Jumat",
+    "jam_mulai": "08:00",
+    "jam_selesai": "09:40"
+  },
+  {
+    "id": 82,
+    "mata_kuliah_id": 61,
+    "ruang_kelas_id": 10,
+    "hari": "Jumat",
+    "jam_mulai": "08:00",
+    "jam_selesai": "09:40"
+  },
+  {
+    "id": 83,
+    "mata_kuliah_id": 6,
+    "ruang_kelas_id": 4,
+    "hari": "Jumat",
+    "jam_mulai": "09:40",
+    "jam_selesai": "11:20"
+  },
+  {
+    "id": 84,
+    "mata_kuliah_id": 16,
+    "ruang_kelas_id": 7,
+    "hari": "Jumat",
+    "jam_mulai": "09:40",
+    "jam_selesai": "11:20"
+  },
+  {
+    "id": 85,
+    "mata_kuliah_id": 47,
+    "ruang_kelas_id": 15,
+    "hari": "Jumat",
+    "jam_mulai": "09:40",
+    "jam_selesai": "11:20"
+  },
+  {
+    "id": 86,
+    "mata_kuliah_id": 55,
+    "ruang_kelas_id": 5,
+    "hari": "Jumat",
+    "jam_mulai": "09:40",
+    "jam_selesai": "11:20"
+  },
+  {
+    "id": 87,
+    "mata_kuliah_id": 1,
+    "ruang_kelas_id": 17,
+    "hari": "Jumat",
+    "jam_mulai": "11:20",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 88,
+    "mata_kuliah_id": 17,
+    "ruang_kelas_id": 9,
+    "hari": "Jumat",
+    "jam_mulai": "11:20",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 89,
+    "mata_kuliah_id": 46,
+    "ruang_kelas_id": 12,
+    "hari": "Jumat",
+    "jam_mulai": "11:20",
+    "jam_selesai": "13:00"
+  },
+  {
+    "id": 90,
+    "mata_kuliah_id": 54,
+    "ruang_kelas_id": 8,
+    "hari": "Jumat",
+    "jam_mulai": "11:20",
+    "jam_selesai": "13:00"
+  }
+]
