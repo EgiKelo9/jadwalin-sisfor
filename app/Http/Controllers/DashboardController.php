@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\JadwalSementara;
+use App\Models\PeminjamanKelas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -31,10 +32,13 @@ class DashboardController extends Controller
                 ]);
             } elseif ($user->admin_id || $user->role === 'admin') {
                 $admin = $user->admin_id ? $user->admin : null;
-                // dd($formattedDate);
                 $jadwal = JadwalSementara::with(['jadwal.mataKuliah', 'jadwal.ruangKelas'])->where('tanggal', $formattedDate)->get();
-                // dd($jadwal->toArray());
+                $peminjaman = PeminjamanKelas::with(['ruangKelas'])
+                    ->where('status', 'diterima')
+                    ->where('tanggal_peminjaman', $formattedDate)
+                    ->get();
                 return Inertia::render('beranda', [
+                    'peminjaman' => $peminjaman->toArray(),
                     'jadwal' => $jadwal->toArray(),
                     'user' => $admin,
                     'userRole' => 'admin',

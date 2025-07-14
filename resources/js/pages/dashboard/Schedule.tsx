@@ -10,13 +10,15 @@ const BASE_END_MIN = 19 * 60;
 const PIXELS_PER_MIN = 1.5;
 
 export default function Schedule({
-  jadwal,
+  jadwal = [],
+  peminjaman = [],
   selectedDate,
   selectedMonthYear,
   setSelectedDate,
   setSelectedMonthYear
 }: {
   jadwal?: any[];
+  peminjaman?: any[];
   selectedDate: number;
   selectedMonthYear: string;
   setSelectedDate: (date: number) => void;
@@ -52,6 +54,12 @@ export default function Schedule({
     "bg-card/30",
     "bg-destructive/30",
     "bg-ring/30",
+  ];
+
+  // Combine jadwal and peminjaman for rendering
+  const allEvents = [
+    ...(jadwal || []).map(item => ({ ...item, _type: "jadwal" })),
+    ...(peminjaman || []).map(item => ({ ...item, _type: "peminjaman" })),
   ];
 
   return (
@@ -137,8 +145,9 @@ export default function Schedule({
               />
             );
           })}
-          {jadwal && jadwal.length > 0 ? (
-            jadwal.map((item, idx) => {
+          {allEvents.length > 0 ? (
+            allEvents.map((item, idx) => {
+              // Use different fields for jadwal and peminjaman
               const startMin = parseTimeToMinutes(item.jam_mulai);
               const endMin = parseTimeToMinutes(item.jam_selesai);
               const top = (startMin - BASE_START_MIN) * PIXELS_PER_MIN;
@@ -156,7 +165,9 @@ export default function Schedule({
               placedEvents.push({ start: startMin, end: endMin, column });
 
               const leftOffsetPx = column * 250;
-              const colorClass = colors[idx % colors.length];
+              const colorClass = item._type === "peminjaman"
+                ? "bg-yellow-200 border-yellow-400"
+                : colors[idx % colors.length];
 
               return (
                 <div
@@ -172,20 +183,29 @@ export default function Schedule({
                   }}
                 >
                   <div className="font-semibold">
-                    {item.jadwal?.mata_kuliah?.nama || "Tanpa Nama"}
+                    {item._type === "jadwal"
+                      ? item.jadwal?.mata_kuliah?.nama || "Tanpa Nama"
+                      : item.ruang_kelas?.nama || "Peminjaman Ruang"}
                   </div>
                   <div className="text-xs">
-                    {item.jadwal?.ruang_kelas?.nama || "-"}
+                    {item._type === "jadwal"
+                      ? item.jadwal?.ruang_kelas?.nama || "-"
+                      : item.ruang_kelas?.nama || "-"}
                   </div>
                   <div className="text-xs text-muted-foreground">
                     {item.jam_mulai} - {item.jam_selesai}
                   </div>
+                  {item._type === "peminjaman" && (
+                    <div className="text-xs text-yellow-700 mt-1">
+                      Peminjaman: {item.mahasiswa?.nama || item.dosen?.nama || "-"}
+                    </div>
+                  )}
                 </div>
               );
             })
           ) : (
             <div className="text-muted-foreground text-sm absolute top-4 left-4">
-              Tidak ada jadwal untuk hari ini.
+              Tidak ada jadwal atau peminjaman untuk hari ini.
             </div>
           )}
         </div>
