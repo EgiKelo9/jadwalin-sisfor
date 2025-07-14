@@ -6,9 +6,8 @@ import { createTableColumns, BaseEntity } from "@/components/ui/columns"
 export type AksesRole = {
     id: number
     nama: string
-    mahasiswa: string | number
-    dosen: string | number
-    admin: string | number
+    jumlah: number
+    akses: string | string[]
 } & BaseEntity
 
 export function createAksesRoleColumns(userRole?: string, canUpdate?: boolean): ColumnDef<AksesRole>[] {
@@ -21,25 +20,24 @@ export function createAksesRoleColumns(userRole?: string, canUpdate?: boolean): 
                 type: "text",
             },
             {
-                key: "mahasiswa",
-                header: "Akses Mahasiswa",
+                key: "jumlah",
+                header: "Jumlah Akses",
                 sortable: true,
                 type: "text",
                 suffix: " Akses",
             },
             {
-                key: "dosen",
-                header: "Akses Dosen",
-                sortable: true,
-                type: "text",
-                suffix: " Akses",
-            },
-            {
-                key: "admin",
-                header: "Akses Admin",
-                sortable: true,
-                type: "text",
-                suffix: " Akses",
+                key: "akses",
+                header: "Akses Dimiliki",
+                sortable: false,
+                type: "custom",
+                customRenderer: (row) => {
+                    return (
+                        <span>
+                            {Array.isArray(row.akses) ? row.akses.join(', ') : row.akses}
+                        </span>
+                    )
+                }
             },
         ],
         actionConfig: {
