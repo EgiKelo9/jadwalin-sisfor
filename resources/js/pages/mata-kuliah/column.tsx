@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { createTableColumns, BaseEntity } from "@/components/ui/columns"
+import { router } from "@inertiajs/react"
 
 export type MataKuliah = {
     id: number
@@ -18,7 +19,7 @@ export type MataKuliah = {
     }
 } & BaseEntity
 
-export function createMataKuliahColumns(userRole?: string, canUpdate?: boolean, canDelete?: boolean): ColumnDef<MataKuliah>[] {
+export function createMataKuliahColumns(userRole?: string, canUpdate?: boolean, canDelete?: boolean, tabAktif?: string): ColumnDef<MataKuliah>[] {
     return createTableColumns<MataKuliah>({
         dataColumns: [
             {
@@ -63,13 +64,29 @@ export function createMataKuliahColumns(userRole?: string, canUpdate?: boolean, 
             showEdit: canUpdate ?? false,
             showDelete: canDelete ?? false,
             showSwitch: canUpdate ?? false,
-            showActionButton: false,
+            showActionButton: true,
             showMultipleButtons: false,
             switchLabel: "Status",
             switchKey: "status",
             getSwitchChecked: (item) => item.status === 'aktif',
             switchTrueValue: 'aktif',
             switchFalseValue: 'nonaktif',
+            actionButtonLabel: tabAktif === "Favorit" ? "Hapus" : "Favorit",
+            onAction: (item) => {
+                router.post(`/${userRole}/mata-kuliah/${item.id}/favorit`, {
+                    id: item.id,
+                    tabAktif: tabAktif,
+                    _method: 'POST',
+                }, {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        console.log("Mata Kuliah successfully added to favorites");
+                    },
+                    onError: (error) => {
+                        console.error("Failed to add Mata Kuliah to favorites:", error);
+                    }
+                });
+            }
         },
         showSelectColumn: false,
     })

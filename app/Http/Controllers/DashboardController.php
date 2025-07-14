@@ -20,25 +20,33 @@ class DashboardController extends Controller
         if ($user->mahasiswa_id || $user->dosen_id || $user->admin_id) {
             if ($user->mahasiswa_id || $user->role === 'mahasiswa') {
                 $mahasiswa = $user->mahasiswa_id ? $user->mahasiswa : null;
+                $mataKuliah = $mahasiswa->mataKuliahs->pluck('id')->toArray();
+                $jadwal = JadwalSementara::with(['jadwal.mataKuliah', 'jadwal.ruangKelas', 'ruangKelas'])
+                    ->whereHas('jadwal.mataKuliah', function ($query) use ($mataKuliah) {
+                        $query->whereIn('id', $mataKuliah);
+                    })
+                    ->where('tanggal', $formattedDate)->get();
                 return Inertia::render('beranda', [
+                    'jadwal' => $jadwal->toArray(),
                     'user' => $mahasiswa,
                     'userRole' => 'mahasiswa',
                 ]);
             } elseif ($user->dosen_id || $user->role === 'dosen') {
                 $dosen = $user->dosen_id ? $user->dosen : null;
+                $jadwal = JadwalSementara::with(['jadwal.mataKuliah', 'jadwal.ruangKelas', 'ruangKelas'])
+                    ->whereHas('jadwal.mataKuliah', function ($query) use ($dosen) {
+                        $query->where('dosen_id', $dosen->id);
+                    })
+                    ->where('tanggal', $formattedDate)->get();
                 return Inertia::render('beranda', [
+                    'jadwal' => $jadwal->toArray(),
                     'user' => $dosen,
                     'userRole' => 'dosen',
                 ]);
             } elseif ($user->admin_id || $user->role === 'admin') {
                 $admin = $user->admin_id ? $user->admin : null;
-                $jadwal = JadwalSementara::with(['jadwal.mataKuliah', 'jadwal.ruangKelas'])->where('tanggal', $formattedDate)->get();
-                $peminjaman = PeminjamanKelas::with(['ruangKelas'])
-                    ->where('status', 'diterima')
-                    ->where('tanggal_peminjaman', $formattedDate)
-                    ->get();
+                $jadwal = JadwalSementara::with(['jadwal.mataKuliah', 'jadwal.ruangKelas', 'ruangKelas'])->where('tanggal', $formattedDate)->get();
                 return Inertia::render('beranda', [
-                    'peminjaman' => $peminjaman->toArray(),
                     'jadwal' => $jadwal->toArray(),
                     'user' => $admin,
                     'userRole' => 'admin',

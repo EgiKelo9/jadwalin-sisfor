@@ -14,7 +14,6 @@ type AksesRoleData = {
 };
 
 export default function LihatAksesRole({ aksesRole, userRole, }: { aksesRole: AksesRoleData[], userRole: string, }) {
-    console.log(userRole);
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Admin',
@@ -31,26 +30,22 @@ export default function LihatAksesRole({ aksesRole, userRole, }: { aksesRole: Ak
     ];
     return (
         <AppLayout breadcrumbs={breadcrumbs} userRole='admin'>
-            <Head title="Lihat Akses Role" />
+            <Head title="Lihat Peran dan Akses" />
             <div className="flex h-full w-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
-                <h1 className='text-xl py-2 font-semibold'>Detail Akses Role</h1>
+                <h1 className='text-xl py-2 font-semibold'>Lihat Peran dan Akses</h1>
                 
                 {aksesRole.map((role) => (
                     <div key={role.id} className="grid grid-cols-2 gap-4 border p-4 rounded-lg mb-4">
-                        <div className="flex flex-col gap-2">
-                            <Label>ID</Label>
+                        <div className="flex flex-col gap-2 col-span-2">
+                            <Label>ID Akses</Label>
                             <Input value={role.id} disabled />
                         </div>
-                        <div className="flex flex-col gap-2">
-                            <Label>Nama Role</Label>
-                            <Input value={role.nama_role} disabled />
-                        </div>
                         <div className="flex flex-col gap-2 col-span-2">
-                            <Label>Akses</Label>
+                            <Label>Nama Akses</Label>
                             <Input value={role.akses} disabled />
                         </div>
                         <div className="flex flex-col gap-2 col-span-2">
-                            <Label>Deskripsi</Label>
+                            <Label>Deskripsi Akses</Label>
                             <Input value={role.deskripsi} disabled />
                         </div>
                     </div>

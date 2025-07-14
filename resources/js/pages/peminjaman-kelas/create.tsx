@@ -71,7 +71,39 @@ type UserData = {
     email: string;
 }
 
-export default function BuatPeminjamanKelas({ ruangKelas, peminjamanKelas, user, userRole }: { ruangKelas: RuangKelasData[], peminjamanKelas: PeminjamanKelasData[], user: UserData, userRole: string }) {
+type JadwalData = {
+    id: number;
+    jadwal: {
+        id: number;
+        mata_kuliah: {
+            id: number;
+            nama: string;
+        };
+        ruang_kelas: {
+            id: number;
+            nama: string;
+            gedung: string;
+            lantai: number;
+        };
+        hari: "senin" | "selasa" | "rabu" | "kamis" | "jumat";
+        jam_mulai: string;
+        jam_selesai: string;
+        status: "aktif" | "nonaktif";
+    }
+    ruang_kelas: {
+        id: number;
+        nama: string;
+        gedung: string;
+        lantai: number;
+    };
+    ruang_kelas_id: number;
+    lokasi: "online" | "offline";
+    tanggal: Date | string;
+    jam_mulai: Date | string;
+    jam_selesai: Date | string;
+}
+
+export default function BuatPeminjamanKelas({ ruangKelas, peminjamanKelas, jadwals, user, userRole }: { ruangKelas: RuangKelasData[], peminjamanKelas: PeminjamanKelasData[], jadwals: JadwalData[], user: UserData, userRole: string }) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: userRole.charAt(0).toUpperCase() + userRole.slice(1),
@@ -142,8 +174,14 @@ export default function BuatPeminjamanKelas({ ruangKelas, peminjamanKelas, user,
             peminjaman.status === 'diterima' // Only check approved bookings
         );
 
+        const conflictingSchedules = jadwals.filter(jadwal =>
+            jadwal.ruang_kelas_id === ruangId &&
+            new Date(jadwal.tanggal).toDateString() === new Date(data.tanggal_peminjaman).toDateString() &&
+            jadwal.lokasi === 'offline'
+        );
+
         // If no bookings on the same date, room is available
-        if (conflictingBookings.length === 0) {
+        if (conflictingBookings.length === 0 && conflictingSchedules.length === 0) {
             return { available: true, reason: '' };
         }
 
@@ -162,12 +200,33 @@ export default function BuatPeminjamanKelas({ ruangKelas, peminjamanKelas, user,
             const existingEnd = timeToMinutes(existingEndTime.toString());
 
             // Check for time overlap
-            const hasOverlap = (newStart < existingEnd && newEnd > existingStart);
+            const hasOverlap = (newStart <= existingEnd && newEnd >= existingStart);
 
             if (hasOverlap) {
                 return {
                     available: false,
                     reason: `Ruang sudah dipinjam pada ${existingStartTime} - ${existingEndTime}`
+                };
+            }
+        }
+
+        for (const schedule of conflictingSchedules) {
+            const existingStartTime = schedule.jam_mulai;
+            const existingEndTime = schedule.jam_selesai;
+
+            // Convert time strings to minutes for easier comparison
+            const newStart = timeToMinutes(newStartTime.toString());
+            const newEnd = timeToMinutes(newEndTime.toString());
+            const existingStart = timeToMinutes(existingStartTime.toString());
+            const existingEnd = timeToMinutes(existingEndTime.toString());
+
+            // Check for time overlap
+            const hasOverlap = (newStart <= existingEnd && newEnd >= existingStart);
+
+            if (hasOverlap) {
+                return {
+                    available: false,
+                    reason: `Ruang sudah terjadwal pada ${existingStartTime} - ${existingEndTime}`
                 };
             }
         }

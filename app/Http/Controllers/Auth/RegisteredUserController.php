@@ -81,6 +81,10 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        if ($user->mahasiswa && $user->mahasiswa->mataKuliahs->isEmpty()) {
+            return to_route('mahasiswa.mata-kuliah.index')->with('info', 'Anda belum memilih mata kuliah. Silakan pilih mata kuliah terlebih dahulu.');
+        }
+
         return redirect()->intended(route($role . '.dashboard', absolute: false));
     }
 }

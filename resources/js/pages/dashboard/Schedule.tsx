@@ -6,8 +6,8 @@ function parseTimeToMinutes(time: string): number {
 }
 
 const BASE_START_MIN = 8 * 60;
-const BASE_END_MIN = 19 * 60;
-const PIXELS_PER_MIN = 1.5;
+const BASE_END_MIN = 18 * 60;
+const PIXELS_PER_MIN = 1.25;
 
 export default function Schedule({
   jadwal = [],
@@ -77,8 +77,10 @@ export default function Schedule({
           ))}
         </select>
       </div>
-      <ScrollArea className="w-[850px] mb-4">
-        <div className="flex w-max space-x-2 px-1 pb-2 border-b border-border">
+
+      {/* Baris tanggal */}
+      <ScrollArea className="w-full mb-4">
+        <div className="flex w-max space-x-2 px-1 pb-2 border-b">
           {Array.from({ length: lastDay }).map((_, idx) => {
             const date = idx + 1;
             const isActive = date === selectedDate;
@@ -188,12 +190,10 @@ export default function Schedule({
                       : item.ruang_kelas?.nama || "Peminjaman Ruang"}
                   </div>
                   <div className="text-xs">
-                    {item._type === "jadwal"
-                      ? item.jadwal?.ruang_kelas?.nama || "-"
-                      : item.ruang_kelas?.nama || "-"}
+                    {item.lokasi === "offline" ? item.ruang_kelas?.nama : "Online Meeting"}
                   </div>
-                  <div className="text-xs text-muted-foreground">
-                    {item.jam_mulai} - {item.jam_selesai}
+                  <div className="text-xs text-gray-600">
+                    {item.jam_mulai.slice(0, 5)} - {item.jam_selesai.slice(0, 5)}
                   </div>
                   {item._type === "peminjaman" && (
                     <div className="text-xs text-yellow-700 mt-1">

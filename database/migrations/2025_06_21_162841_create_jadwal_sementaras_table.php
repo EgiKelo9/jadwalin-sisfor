@@ -18,9 +18,12 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
             $table->foreignId('ruang_kelas_id')
+                ->nullable()
                 ->constrained('ruang_kelas')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
+            $table->enum('lokasi', ['online', 'offline'])
+                ->default('offline');
             $table->date('tanggal');
             $table->time('jam_mulai');
             $table->time('jam_selesai');

@@ -39,6 +39,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::resource('mata-kuliah', MataKuliahController::class);
             Route::put('mata-kuliah/{mata_kuliah}/status', [MataKuliahController::class, 'updateStatus'])
                 ->name('mata-kuliah.updateStatus');
+            Route::post('mata-kuliah/{mata_kuliah}/favorit', [MataKuliahController::class, 'updateFavorite'])
+                ->name('mata-kuliah.updateFavorite');
             Route::prefix('peminjaman-kelas')->name('peminjaman-kelas.')->group(function () {
                 Route::get('riwayat', [PeminjamanKelasController::class, 'history'])
                     ->name('history');

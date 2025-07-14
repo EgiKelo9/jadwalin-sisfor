@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('admins', function (Blueprint $table) {
+        Schema::create('dosens', function (Blueprint $table) {
             $table->id();
             $table->string('nip', 20)->unique();
+            $table->string('nidn', 10)->unique();
             $table->string('nama');
             $table->string('email')->unique();
-            $table->string('telepon', 15)->unique();
+            $table->string('telepon', 20)->unique();
             $table->text('alamat');
             $table->string('foto')->nullable();
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('admins');
+        Schema::dropIfExists('dosens');
     }
 };

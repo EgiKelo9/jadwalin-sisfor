@@ -35,10 +35,28 @@ class JadwalController extends Controller
         if (!$user->hasAccess('Lihat Jadwal Perkuliahan')) {
             return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk melihat daftar jadwal perkuliahan.']);
         }
-        $jadwals = JadwalSementara::with(['jadwal.mataKuliah', 'ruangKelas'])
-            ->orderBy('tanggal')
-            ->orderBy('jam_mulai')
-            ->get();
+        if ($user->mahasiswa && $user->mahasiswa->mataKuliahs) {
+            $jadwals = JadwalSementara::with(['jadwal.mataKuliah', 'jadwal.ruangKelas', 'ruangKelas'])
+                ->whereHas('jadwal.mataKuliah', function ($query) use ($user) {
+                    $query->whereIn('id', $user->mahasiswa->mataKuliahs->pluck('id')->toArray());
+                })
+                ->orderBy('tanggal')
+                ->orderBy('jam_mulai')
+                ->get();
+        } else if ($user->dosen) {
+            $jadwals = JadwalSementara::with(['jadwal.mataKuliah', 'jadwal.ruangKelas', 'ruangKelas'])
+                ->whereHas('jadwal.mataKuliah', function ($query) use ($user) {
+                    $query->where('dosen_id', $user->dosen_id);
+                })
+                ->orderBy('tanggal')
+                ->orderBy('jam_mulai')
+                ->get();
+        } else {
+            $jadwals = JadwalSementara::with(['jadwal.mataKuliah', 'jadwal.ruangKelas', 'ruangKelas'])
+                ->orderBy('tanggal')
+                ->orderBy('jam_mulai')
+                ->get();
+        }
         return Inertia::render('jadwal/index', [
             'jadwals' => $jadwals,
             'userRole' => $user->role,
@@ -95,7 +113,7 @@ class JadwalController extends Controller
             DB::beginTransaction();
 
             // Clear existing temporary schedules
-            JadwalSementara::truncate();
+            DB::table('jadwal_sementaras')->delete();
 
             // Generate new schedules
             Jadwal::withWeeklySchedule($request->jumlah_pertemuan, $request->tanggal_mulai, $request->semester);

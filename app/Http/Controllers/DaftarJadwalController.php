@@ -32,11 +32,31 @@ class DaftarJadwalController extends Controller
         if (!$user->hasAccess('Lihat Daftar Jadwal Perkuliahan')) {
             return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk melihat daftar jadwal perkuliahan.']);
         }
-        $jadwals = Jadwal::with(['mataKuliah', 'ruangKelas'])
-            ->orderBy('status')
-            ->orderByDesc('hari')
-            ->orderBy('jam_mulai')
-            ->get();
+        if ($user->mahasiswa && $user->mahasiswa->mataKuliahs) {
+            $jadwals = Jadwal::with(['mataKuliah', 'ruangKelas'])
+                ->whereHas('mataKuliah', function ($query) use ($user) {
+                    $query->whereIn('id', $user->mahasiswa->mataKuliahs->pluck('id')->toArray());
+                })
+                ->orderBy('status')
+                ->orderByDesc('hari')
+                ->orderBy('jam_mulai')
+                ->get();
+        } else if ($user->dosen) {
+            $jadwals = Jadwal::with(['mataKuliah', 'ruangKelas'])
+                ->whereHas('mataKuliah', function ($query) use ($user) {
+                    $query->where('dosen_id', $user->dosen_id);
+                })
+                ->orderBy('status')
+                ->orderByDesc('hari')
+                ->orderBy('jam_mulai')
+                ->get();
+        } else {
+            $jadwals = Jadwal::with(['mataKuliah', 'ruangKelas'])
+                ->orderBy('status')
+                ->orderByDesc('hari')
+                ->orderBy('jam_mulai')
+                ->get();
+        }
         return Inertia::render('daftar-jadwal/index', [
             'daftarJadwals' => $jadwals,
             'userRole' => $user->role,

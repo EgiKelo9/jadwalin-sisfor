@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class MataKuliah extends Model
 {
@@ -18,6 +19,11 @@ class MataKuliah extends Model
      * @var list<string>
      */
     protected $guarded = [];
+
+    public function mahasiswas(): BelongsToMany
+    {
+        return $this->belongsToMany(Mahasiswa::class, 'mahasiswa_mata_kuliah', 'mata_kuliah_id', 'mahasiswa_id')->withTimestamps();
+    }
 
     public function dosen(): BelongsTo
     {

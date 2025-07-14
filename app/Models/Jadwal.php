@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -50,8 +51,10 @@ class Jadwal extends Model
 
         $jadwals = self::where('status', 'aktif')
             ->whereHas('mataKuliah', function ($query) use ($semesterNumbers) {
-                $query->whereIn('semester', $semesterNumbers);
+                // Perbaikan untuk MySQL - gunakan CAST yang lebih kompatibel
+                $query->whereIn(DB::raw('CAST(semester AS SIGNED)'), $semesterNumbers);
             })
+            ->with(['mataKuliah', 'ruangKelas']) // Eager loading untuk performa
             ->get();
 
         $startDate = $startDate ? Carbon::parse($startDate) : Carbon::now();
@@ -64,18 +67,26 @@ class Jadwal extends Model
                 'rabu' => 'wednesday',
                 'kamis' => 'thursday',
                 'jumat' => 'friday',
+                default => null,
             };
+            if (!$dayInEnglish) {
+                continue;
+            }
 
             // Find first occurrence of target day
-            $currentDate = clone $startDate;
+            $currentDate = $startDate->copy();
             while (strtolower($currentDate->englishDayOfWeek) !== $dayInEnglish) {
                 $currentDate->addDay();
             }
 
-            // Always start at 08:00
-            $start = \Carbon\Carbon::createFromFormat('H:i', $jadwal->jam_mulai);
+            // Parsing jam mulai dengan validasi
+            $start = Carbon::createFromFormat('H:i:s', $jadwal->jam_mulai);
+
+            // Round start minute to nearest 10
             $start->minute = (int) floor($start->minute / 10) * 10;
-            $earliestStart = \Carbon\Carbon::createFromTime(8, 0);
+
+            // Always start at 08:00 minimum
+            $earliestStart = Carbon::createFromTime(8, 0);
             if ($start->lessThan($earliestStart)) {
                 $start = $earliestStart->copy();
             }
@@ -88,31 +99,38 @@ class Jadwal extends Model
             $end = $start->copy()->addMinutes($durationMinutes);
 
             // If end exceeds 16:00, cap it
-            $latestEnd = \Carbon\Carbon::createFromTime(16, 0);
+            $latestEnd = Carbon::createFromTime(16, 0);
             if ($end->greaterThan($latestEnd)) {
                 $end = $latestEnd->copy();
             }
-
-            // Round start minute to nearest 10
-            $start->minute = (int) floor($start->minute / 10) * 10;
 
             // Validate start < end
             if ($start->greaterThanOrEqualTo($end)) {
                 continue;
             }
 
+            // Batch insert untuk performa yang lebih baik
+            $jadwalSementaraData = [];
+            $currentScheduleDate = $currentDate->copy();
+
             for ($i = 0; $i < $count; $i++) {
                 if ($i > 0) {
-                    $currentDate->addWeek();
+                    $currentScheduleDate->addWeek();
                 }
 
-                JadwalSementara::create([
+                $jadwalSementaraData[] = [
                     'jadwal_id' => $jadwal->id,
+                    'lokasi' => 'offline',
                     'ruang_kelas_id' => $jadwal->ruang_kelas_id,
-                    'tanggal' => $currentDate->format('Y-m-d'),
+                    'tanggal' => $currentScheduleDate->format('Y-m-d'),
                     'jam_mulai' => $start->format('H:i'),
                     'jam_selesai' => $end->format('H:i'),
-                ]);
+                ];
+            }
+
+            // Insert batch untuk performa
+            if (!empty($jadwalSementaraData)) {
+                JadwalSementara::insert($jadwalSementaraData);
             }
         }
 

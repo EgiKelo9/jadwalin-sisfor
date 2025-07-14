@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('akses_roles', function (Blueprint $table) {
             $table->id();
             // $table->enum('nama_role', ['mahasiswa', 'dosen', 'admin'])->default('mahasiswa');
-            $table->string('akses');
+            $table->string('akses')->unique();
             $table->text('deskripsi')->nullable();
             $table->timestamps();
-            $table->unique(['nama_role', 'akses']);
+            // $table->unique(['nama_role', 'akses']);
         });
     }
 

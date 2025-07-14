@@ -58,7 +58,10 @@ export function createJadwalSementaraColumns(userRole?: string, canUpdate?: bool
                 sortable: true,
                 type: "custom",
                 customRenderer: (item) => {
-                    return `${item.ruang_kelas.nama} (${item.ruang_kelas.gedung}, Lantai ${item.ruang_kelas.lantai})`;
+                    if (item.ruang_kelas === null) {
+                        return "Online Meeting";
+                    }
+                    return `${item.ruang_kelas?.nama} (${item.ruang_kelas?.gedung}, Lantai ${item.ruang_kelas?.lantai})`;
                 }
             },
             {

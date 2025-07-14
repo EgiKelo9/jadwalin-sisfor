@@ -37,7 +37,7 @@ return new class extends Migration
                 ->constrained('ruang_kelas')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->date('hari_perubahan');
+            $table->enum('hari_perubahan', ['senin', 'selasa', 'rabu', 'kamis', 'jumat']);
             $table->time('jam_mulai_baru');
             $table->time('jam_selesai_baru');
             $table->string('alasan_perubahan');

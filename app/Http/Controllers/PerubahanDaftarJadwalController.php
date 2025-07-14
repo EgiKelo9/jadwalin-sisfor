@@ -79,10 +79,18 @@ class PerubahanDaftarJadwalController extends Controller
             return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk membuat daftar jadwal perkuliahan.']);
         }
         $ruangKelas = RuangKelas::where('status', 'layak')->orderBy('nama')->get();
-        $mataKuliahs = MataKuliah::whereHas('jadwal')
-            ->with(['dosen', 'jadwal'])
-            ->orderBy('nama')
-            ->get();
+        if ($user->dosen) {
+            $mataKuliahs = MataKuliah::whereHas('jadwal')
+                ->with(['dosen', 'jadwal'])
+                ->where('dosen_id', $user->dosen_id)
+                ->orderBy('nama')
+                ->get();
+        } else {
+            $mataKuliahs = MataKuliah::whereHas('jadwal')
+                ->with(['dosen', 'jadwal'])
+                ->orderBy('nama')
+                ->get();
+        }
         return Inertia::render('ajukan-perubahan-daftar/create', [
             'ruangKelas' => $ruangKelas,
             'mataKuliahs' => $mataKuliahs,

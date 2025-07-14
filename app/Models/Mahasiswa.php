@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Mahasiswa extends Model
 {
@@ -22,6 +23,11 @@ class Mahasiswa extends Model
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'mahasiswa_id');
+    }
+
+    public function mataKuliahs(): BelongsToMany
+    {
+        return $this->belongsToMany(MataKuliah::class, 'mahasiswa_mata_kuliah', 'mahasiswa_id', 'mata_kuliah_id')->withTimestamps();
     }
 
     public function peminjamanKelas(): HasMany
