@@ -4,23 +4,9 @@ import { Head } from '@inertiajs/react';
 import { createAksesRoleColumns } from './column-index';
 import { DataTable, ColumnFilterConfig } from '@/components/ui/data-table';
 
-export const columnFiltersConfig: ColumnFilterConfig[] = [
-    {
-        columnId: 'nama_role',
-        label: 'Peran',
-        type: 'select',
-    },
-    {
-        columnId: 'akses',
-        label: 'Akses',
-        type: 'select',
-    },
-];
-
 interface AksesRoleTableProps {
     aksesRole: any[];
     userRole: string;
-    // tabAktif: string;
     canUpdate?: boolean;
 }
 
@@ -38,7 +24,7 @@ export default function AksesRoleIndex({ aksesRole, userRole, canUpdate}: AksesR
 
     // Create columns with permissions
     const columns = createAksesRoleColumns(userRole, canUpdate);
-    // console.log(tabAktif);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs} userRole={userRole}>
             <Head title="Peran dan Akses" />
@@ -55,7 +41,6 @@ export default function AksesRoleIndex({ aksesRole, userRole, canUpdate}: AksesR
                     showActiveTab={true}
                     activeTab={['General', 'Khusus']}
                     defaultTab='General'
-                    columnFilters={columnFiltersConfig}
                 />
             </div>
         </AppLayout>

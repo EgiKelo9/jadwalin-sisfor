@@ -101,8 +101,7 @@ class User extends Authenticatable
     public function getDefaultAccessByRole(): array
     {
         $userRole = $this->getRole();
-        $aksesRoles = AksesRole::where('nama_role', $userRole)->get();
-        return $aksesRoles->pluck('akses')->toArray();
+        return AksesRole::getDefaultAccessByRole($userRole);
     }
 
     /**
@@ -148,29 +147,21 @@ class User extends Authenticatable
     public function grantDefaultAccessByRole(string $role): void
     {
         $targetRole = $role ?? $this->getRole();
-        $defaultAccesses = AksesRole::where('nama_role', $targetRole)->get();
+        $defaultAccesses = AksesRole::getDefaultAccessByRole($targetRole);
+        $allAccesses = AksesRole::getAllAccess();
 
-        // Grant access for target role with status = true
-        foreach ($defaultAccesses as $aksesRole) {
+        foreach ($allAccesses as $access) {
+            $aksesRole = AksesRole::where('akses', $access)->first();
+            if (!$aksesRole) continue;
+
+            $status = in_array($access, $defaultAccesses);
+
             $existingAccess = $this->aksesRoles()->where('akses_role_id', $aksesRole->id)->first();
 
             if ($existingAccess) {
-                $this->aksesRoles()->updateExistingPivot($aksesRole->id, ['status' => true]);
+                $this->aksesRoles()->updateExistingPivot($aksesRole->id, ['status' => $status]);
             } else {
-                $this->aksesRoles()->attach($aksesRole->id, ['status' => true]);
-            }
-        }
-
-        // Handle other roles with status = false
-        $otherRoleAccesses = AksesRole::where('nama_role', '!=', $targetRole)->get();
-
-        foreach ($otherRoleAccesses as $aksesRole) {
-            $existingAccess = $this->aksesRoles()->where('akses_role_id', $aksesRole->id)->first();
-
-            if ($existingAccess) {
-                $this->aksesRoles()->updateExistingPivot($aksesRole->id, ['status' => false]);
-            } else {
-                $this->aksesRoles()->attach($aksesRole->id, ['status' => false]);
+                $this->aksesRoles()->attach($aksesRole->id, ['status' => $status]);
             }
         }
     }
@@ -180,18 +171,18 @@ class User extends Authenticatable
      */
     public function grantCustomAccess(string $role, string $access): void
     {
-        $aksesRoles = AksesRole::where('akses', $access)->get();
-        if ($aksesRoles->isEmpty()) return;
+        $aksesRole = AksesRole::where('akses', $access)->first();
+        if (!$aksesRole) return;
 
-        foreach ($aksesRoles as $aksesRole) {
-            $roleStatus = ($aksesRole->nama_role === $role) ? true : false;
-            $existingAccess = $this->aksesRoles()->where('akses_role_id', $aksesRole->id)->first();
+        $defaultAccesses = AksesRole::getDefaultAccessByRole($role);
+        $status = in_array($access, $defaultAccesses);
 
-            if ($existingAccess) {
-                $this->aksesRoles()->updateExistingPivot($aksesRole->id, ['status' => $roleStatus]);
-            } else {
-                $this->aksesRoles()->attach($aksesRole->id, ['status' => $roleStatus]);
-            }
+        $existingAccess = $this->aksesRoles()->where('akses_role_id', $aksesRole->id)->first();
+
+        if ($existingAccess) {
+            $this->aksesRoles()->updateExistingPivot($aksesRole->id, ['status' => $status]);
+        } else {
+            $this->aksesRoles()->attach($aksesRole->id, ['status' => $status]);
         }
     }
 

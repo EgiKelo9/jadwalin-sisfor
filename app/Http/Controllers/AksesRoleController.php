@@ -10,7 +10,6 @@ use App\Models\AksesRole;
 
 class AksesRoleController extends Controller
 {
-    public $ngetest;
     /**
      * Get the authenticated user based on their role.
      */
@@ -30,12 +29,6 @@ class AksesRoleController extends Controller
      */
     public function index(Request $request)
     {
-        // return Inertia::render('dashboard/Dashboard');
-        return Inertia::render('beranda', [
-            'user' => $admin,
-            'userRole' => 'admin',
-        ]);
-
         $user = User::find(auth('web')->user()->id);
         if (!$user->hasAccess('Lihat Peran dan Akses')) {
             return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk melihat peran dan akses.']);
@@ -45,21 +38,16 @@ class AksesRoleController extends Controller
             session(['tabAktif' => "Khusus"]);
             $users = User::with(['mahasiswa', 'dosen', 'admin', 'aksesRoles'])->get();
             $aksesRole = $users->map(function ($user) {
+                // dd($user->aksesRoles()->where('akses_akuns.status', true)->get());
                 return (object) [
                     'id' => $user->id,
                     'nama' => $user->getName(),
-                    'mahasiswa' => $user->aksesRoles()
-                        ->where('akses_roles.nama_role', 'mahasiswa')
+                    'jumlah' => $user->aksesRoles()
                         ->where('akses_akuns.status', true)
                         ->count(),
-                    'dosen' => $user->aksesRoles()
-                        ->where('akses_roles.nama_role', 'dosen')
+                    'akses' => $user->aksesRoles()
                         ->where('akses_akuns.status', true)
-                        ->count(),
-                    'admin' => $user->aksesRoles()
-                        ->where('akses_roles.nama_role', 'admin')
-                        ->where('akses_akuns.status', true)
-                        ->count(),
+                        ->pluck('akses')->toArray(),
                 ];
             });
             return Inertia::render('peran-dan-akses/custom', [
@@ -67,7 +55,6 @@ class AksesRoleController extends Controller
                 'userRole' => $user->role,
                 'user' => $this->getReturnedUser(),
                 'canUpdate' => $user->hasAccess('Ubah Peran dan Akses'),
-                // 'tabAktif' => $this->ngetest,
             ]);
         }
         session(['tabAktif' => "General"]);
@@ -76,7 +63,6 @@ class AksesRoleController extends Controller
             'userRole' => $user->role,
             'user' => $this->getReturnedUser(),
             'canUpdate' => $user->hasAccess('Ubah Peran dan Akses'),
-            // 'tabAktif' => $this->ngetest,
         ]);
     }
 
@@ -96,13 +82,10 @@ class AksesRoleController extends Controller
                 'aksesRoles' => $account->aksesRoles,
                 'user' => $this->getReturnedUser(),
             ]);
-        }else {
-            // dd(AksesRole::where('id', $id)->get());
+        } else {
             return Inertia::render('peran-dan-akses/show-general', [
-            'user' => $this->getReturnedUser(),
-            'aksesRole' => AksesRole::where('id', $id)->get(),
-            // 'account' => $account,
-            // 'tabAktif' => $this->ngetest,
+                'user' => $this->getReturnedUser(),
+                'aksesRole' => AksesRole::where('id', $id)->get(),
             ]);
         }
     }
@@ -117,7 +100,6 @@ class AksesRoleController extends Controller
             return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk mengubah peran dan akses.']);
         }
         $account = User::with(['mahasiswa', 'dosen', 'admin', 'aksesRoles'])->findOrFail($id);
-        // dd($account, $this->getReturnedUser());
         return Inertia::render('peran-dan-akses/edit', [
             'account' => $account,
             'aksesRoles' => $account->aksesRoles,
@@ -134,25 +116,11 @@ class AksesRoleController extends Controller
         if (!$user->hasAccess('Ubah Peran dan Akses')) {
             return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk mengubah peran dan akses.']);
         }
-        // dd($this->getReturnedUser());
         $account = User::with(['mahasiswa', 'dosen', 'admin', 'aksesRoles'])->findOrFail($id);
 
-        if ($account->mahasiswa) {
-            $role = 'mahasiswa';
-        } elseif ($account->dosen) {
-            $role = 'dosen';
-        } elseif ($account->admin) {
-            $role = 'admin';
-        } else {
-            $role = "Gak ada cik";
-            // return redirect()->back()->with('error', 'Email anda tidak tersedia. Silakan hubungi administrator.');
-        }
+        $aksesAkuns =  $account->aksesRoles()->get();
 
-        // $aksesRole = AksesRole::where('nama_role', $role)->pluck('id'); // Collection
-        $aksesAkuns =  $account->aksesRoles()
-            ->get(['akses_roles.id', 'akses_roles.nama_role']);
-
-        $result = $aksesAkuns->map(function($role) {
+        $result = $aksesAkuns->map(function ($role) {
             return [
                 'id' => $role->id,
                 'status' => $role->pivot->status,
@@ -161,7 +129,7 @@ class AksesRoleController extends Controller
 
         $aksesIds = $request->akses ?? [];
 
-        $syncData = $result->mapWithKeys(function($item) use ($aksesIds) {
+        $syncData = $result->mapWithKeys(function ($item) use ($aksesIds) {
             return [
                 $item['id'] => [
                     'status' => in_array($item['id'], $aksesIds) ? 1 : 0
@@ -170,14 +138,6 @@ class AksesRoleController extends Controller
         });
 
         $account->aksesRoles()->syncWithoutDetaching($syncData->all());
-        dd("berhasil");
-
-        // $requestIds = collect($request->input('akses')); // Collection dari request
-
-        // $selisihRole = $aksesRole->diff($requestIds);
-
-        // Tampilkan hasil
-        // dd($selisih->values()->all());
-        // dd($aksesRole,$request);
+        return redirect()->back()->with('success', 'Akses berhasil diperbarui.');
     }
 }

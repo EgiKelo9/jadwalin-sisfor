@@ -32,6 +32,11 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return redirect()->back()->with('error', __('User tidak ditemukan.'));
+        }
+
         $status = match ($user->role) {
             'mahasiswa' => $user->mahasiswa->status,
             'dosen' => $user->dosen->status,

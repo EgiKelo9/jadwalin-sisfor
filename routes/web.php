@@ -65,8 +65,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::put('jadwal-perkuliahan/ajukan-perubahan-jadwal/{ajukan_perubahan_daftar}/status', [PerubahanJadwalController::class, 'updateStatus'])
                 ->name('ajukan-perubahan-jadwal.updateStatus');
             Route::resource('jadwal-perkuliahan', JadwalController::class);
-            Route::put('jadwal-perkuliahan/{daftar_jadwal}/status', [JadwalController::class, 'updateStatus'])
-                ->name('jadwal-perkuliahan.updateStatus');
             Route::resource('peran-dan-akses', AksesRoleController::class)
                 ->except(['create', 'store', 'destroy']);
         });

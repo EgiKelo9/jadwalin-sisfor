@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Pencil } from 'lucide-react';
+import { Eye, LoaderCircle, Pencil } from 'lucide-react';
 import { useState } from "react";
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -62,6 +62,9 @@ export default function UbahAksesRole({
   account: Account;
   aksesRoles: AksesRoleData[];
 }) {
+
+  const [processing, setProcessing] = useState(false);
+
   const [akses, setAkses] = useState(() =>
     aksesRoles.map((role) => ({
       ...role,
@@ -78,6 +81,7 @@ export default function UbahAksesRole({
   };
 
   const handleSave = (id: number) => {
+    setProcessing(true);
     const aktifIds = akses.filter(role => role.status).map(role => role.id);
 
     router.put(`/admin/peran-dan-akses/${id}`, {
@@ -94,6 +98,7 @@ export default function UbahAksesRole({
       },
       onFinish: () => {
         console.log('Request selesai');
+        setProcessing(false);
       }
     });
   };
@@ -101,16 +106,16 @@ export default function UbahAksesRole({
 
   return (
     <AppLayout breadcrumbs={breadcrumbs} userRole="admin">
-      <Head title="Ubah Akses Roles" />
+      <Head title="Ubah Peran dan Akses" />
       <div className="flex h-full w-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <h1 className="text-xl py-2 font-semibold">Ubah Akses Roles</h1>
-          {/* <Button variant="outline" asChild>
-            <Link href={`/admin/peran-dan-akses/${account.id}/ubah`}>
-              <Pencil />
-              Ubah
+          <h1 className="text-xl py-2 font-semibold">Ubah Peran dan Akses</h1>
+          <Button variant="outline" asChild>
+            <Link href={`/admin/peran-dan-akses/${account.id}`}>
+              <Eye />
+              Lihat
             </Link>
-          </Button> */}
+          </Button>
         </div>
         <div className="grid grid-cols-2 items-start gap-4 w-full">
           <div className="grid gap-4 mt-2 col-span-2">
@@ -124,123 +129,58 @@ export default function UbahAksesRole({
                 account.mahasiswa
                   ? `${account.mahasiswa.nama} - ${account.mahasiswa.nim} - Mahasiswa`
                   : account.dosen
-                  ? `${account.dosen.nama} - ${account.dosen.nip} - Dosen`
-                  : account.admin
-                  ? `${account.admin.nama} - ${account.admin.nip} - Admin`
-                  : "Tidak Diketahui"
+                    ? `${account.dosen.nama} - ${account.dosen.nip} - Dosen`
+                    : account.admin
+                      ? `${account.admin.nama} - ${account.admin.nip} - Admin`
+                      : "Tidak Diketahui"
               }
               className="w-full"
             />
           </div>
 
-          {/* Akses Mahasiswa */}
           <div className="grid gap-4 mt-2 col-span-2">
-            <Label htmlFor="mahasiswa">Akses Mahasiswa</Label>
-            {akses.filter((role) => role.nama_role === "mahasiswa").length > 0 ? (
+            <Label htmlFor="mahasiswa">Akses Dimiliki</Label>
+            {akses.length > 0 ? (
               <div className="grid grid-cols-2 gap-4 p-4 border border-secondary rounded-lg">
-                {akses
-                  .filter((role) => role.nama_role === "mahasiswa")
-                  .map((role) => (
-                    <div
-                      key={role.id}
-                      className="flex items-center justify-start gap-2 col-span-1 w-full"
-                    >
-                      <Switch
-                        id={`mahasiswa-${role.id}`}
-                        className="mr-1"
-                        checked={role.status}
-                        onCheckedChange={() => toggleStatus(role.id)}
-                      />
-                      <Label htmlFor={`mahasiswa-${role.id}`} className="text-sm">
-                        {role.akses}
-                      </Label>
-                    </div>
-                  ))}
+                {akses.map((role) => (
+                  <div
+                    key={role.id}
+                    className="flex items-center justify-start gap-2 col-span-1 w-full"
+                  >
+                    <Switch
+                      id={`mahasiswa-${role.id}`}
+                      className="mr-1"
+                      checked={role.status}
+                      onCheckedChange={() => toggleStatus(role.id)}
+                    />
+                    <Label htmlFor={`mahasiswa-${role.id}`} className="text-sm">
+                      {role.akses}
+                    </Label>
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="p-4 border border-secondary rounded-lg text-center text-gray-500">
-                Tidak ada akses mahasiswa
-              </div>
-            )}
-          </div>
-
-          {/* Akses Dosen */}
-          <div className="grid gap-4 mt-2 col-span-2">
-            <Label htmlFor="dosen">Akses Dosen</Label>
-            {akses.filter((role) => role.nama_role === "dosen").length > 0 ? (
-              <div className="grid grid-cols-2 gap-4 p-4 border border-secondary rounded-lg">
-                {akses
-                  .filter((role) => role.nama_role === "dosen")
-                  .map((role) => (
-                    <div
-                      key={role.id}
-                      className="flex items-center justify-start gap-2 col-span-1 w-full"
-                    >
-                      <Switch
-                        id={`dosen-${role.id}`}
-                        className="mr-1"
-                        checked={role.status}
-                        onCheckedChange={() => toggleStatus(role.id)}
-                      />
-                      <Label htmlFor={`dosen-${role.id}`} className="text-sm">
-                        {role.akses}
-                      </Label>
-                    </div>
-                  ))}
-              </div>
-            ) : (
-              <div className="p-4 border border-secondary rounded-lg text-center text-gray-500">
-                Tidak ada akses dosen
-              </div>
-            )}
-          </div>
-
-          {/* Akses Admin */}
-          <div className="grid gap-4 mt-2 col-span-2">
-            <Label htmlFor="admin">Akses Admin</Label>
-            {akses.filter((role) => role.nama_role === "admin").length > 0 ? (
-              <div className="grid grid-cols-2 gap-4 p-4 border border-secondary rounded-lg">
-                {akses
-                  .filter((role) => role.nama_role === "admin")
-                  .map((role) => (
-                    <div
-                      key={role.id}
-                      className="flex items-center justify-start gap-2 col-span-1 w-full"
-                    >
-                      <Switch
-                        id={`admin-${role.id}`}
-                        className="mr-1"
-                        checked={role.status}
-                        onCheckedChange={() => toggleStatus(role.id)}
-                      />
-                      <Label htmlFor={`admin-${role.id}`} className="text-sm">
-                        {role.akses}
-                      </Label>
-                    </div>
-                  ))}
-              </div>
-            ) : (
-              <div className="p-4 border border-secondary rounded-lg text-center text-gray-500">
-                Tidak ada akses admin
+                Tidak ada akses yang dimiliki
               </div>
             )}
           </div>
         </div>
         <div className="flex gap-4 mt-2">
-        <Button
+          <Button
+            variant="primary"
+            type="button"
+            onClick={() => handleSave(account.id)}
+          >
+            {processing ? <LoaderCircle className='h-4 w-4 animate-spin' /> : "Simpan"}
+          </Button>
+          <Button
             variant={"outline"}
             type="button"
             onClick={() => window.history.back()}
           >
             Kembali
-        </Button>
-            <Button
-              variant="primary"
-              type="button"
-              onClick={() => handleSave(account.id)}
-            >
-              Simpan 
-            </Button>
+          </Button>
         </div>
       </div>
     </AppLayout>
