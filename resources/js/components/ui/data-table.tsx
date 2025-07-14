@@ -20,6 +20,8 @@ import {
   ChevronDown,
   ChevronDownIcon,
   History,
+  FileText,
+  Download,
 } from "lucide-react"
 
 import {
@@ -85,6 +87,12 @@ interface DataTableProps<TData extends { id: string | number }, TValue> {
   showTopActionButton?: boolean
   topActionButtonLabel?: string
   topActionButtonHref?: string
+  showPdfExport?: boolean
+  pdfExportHandler?: (
+    data: TData[],
+    columnFilters?: ColumnFiltersState,
+    globalFilter?: string
+  ) => void;
   columnFilters?: ColumnFilterConfig[]
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -228,6 +236,8 @@ export function DataTable<TData extends { id: string | number }, TValue>({
   showTopActionButton = false,
   topActionButtonLabel,
   topActionButtonHref,
+  showPdfExport = false,
+  pdfExportHandler,
   columnFilters = [], // New prop with default empty array
   columns,
   data,
@@ -351,6 +361,24 @@ export function DataTable<TData extends { id: string | number }, TValue>({
                 <History />
               </Button>
             </Link>
+          )}
+          {/* PDF export button */}
+          {showPdfExport && pdfExportHandler && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-9"
+                onClick={() => {
+                  const activeColumnFilters = table.getState().columnFilters;
+                  const globalFilter = table.getState().globalFilter;
+                  pdfExportHandler(
+                    table.getFilteredRowModel().rows.map(row => row.original),
+                    activeColumnFilters,
+                    globalFilter
+                  )
+                }}
+              ><Download className="h-4 w-4"/>
+              </Button>
           )}
           {/* column filter */}
           {showColumnFilter && (
