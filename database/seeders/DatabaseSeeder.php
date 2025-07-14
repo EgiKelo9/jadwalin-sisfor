@@ -32,7 +32,6 @@ class DatabaseSeeder extends Seeder
             MataKuliah::factory()->withClasses(6);
         }
         MataKuliah::factory(8)->obscure()->create();
-        MataKuliah::factory(5)->singleClass()->create();
         MataKuliah::where('status', 'aktif')->each(function ($mataKuliah) {
             Jadwal::factory(rand(1, 2))->create(['mata_kuliah_id' => $mataKuliah->id]);
         });

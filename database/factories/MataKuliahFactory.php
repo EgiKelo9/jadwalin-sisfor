@@ -10,7 +10,7 @@ class MataKuliahFactory extends Factory
     {
         return [
             'kode' => $this->faker->unique()->bothify('MK-######'),
-            'nama' => ucwords(implode(' ', $this->faker->words(2))),
+            'nama' => ucwords(implode(' ', $this->faker->words(4))),
             'bobot_sks' => $this->faker->numberBetween(1, 4),
             'kapasitas' => $this->faker->numberBetween(20, 60),
             'semester' => $this->faker->numberBetween(1, 8),
@@ -62,33 +62,13 @@ class MataKuliahFactory extends Factory
     }
 
     public function obscure()
-    {
-        $obscureSubjects = [
-            'Pendidikan Agama',
-            'Pendidikan Pancasila',
-            'Pendidikan Kewarganegaraan',
-            'Bahasa Indonesia',
-            'Etika Profesi',
-            'Kewirausahaan',
-            'Pendidikan Anti Korupsi',
-            'Wawasan Kebangsaan'
-        ];
-        
-        return $this->state(function (array $attributes) use ($obscureSubjects) {
+    {        
+        return $this->state(function (array $attributes) {
             return [
-                'nama' => $this->faker->randomElement($obscureSubjects) . ' - A',
+                'nama' => $this->faker->words(3) . ' - A',
                 'bobot_sks' => 2,
                 'jenis' => 'wajib',
                 'kapasitas' => $this->faker->numberBetween(40, 80),
-            ];
-        });
-    }
-
-    public function singleClass()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'nama' => $attributes['nama'] . ' - A',
             ];
         });
     }
