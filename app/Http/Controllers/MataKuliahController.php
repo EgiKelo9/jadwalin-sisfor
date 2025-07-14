@@ -27,11 +27,30 @@ class MataKuliahController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = User::find(auth('web')->user()->id);
         if (!$user->hasAccess('Lihat Mata Kuliah')) {
             return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk melihat data mata kuliah.']);
+        }
+        if ($request->has('tabAktif') && $request->get('tabAktif') === 'Favorit') {
+            session(['tabAktif' => "Favorit"]);
+            $mataKuliahs = MataKuliah::with('dosen')
+                ->whereHas('mahasiswas', function ($query) use ($user) {
+                    $query->where('mahasiswa_id', $user->mahasiswa_id);
+                })
+                ->orderByDesc('created_at')
+                ->get();
+            return Inertia::render('mata-kuliah/index', [
+                'mataKuliahs' => $mataKuliahs,
+                'userRole' => $user->role,
+                'user' => $this->getReturnedUser(),
+                'canCreate' => $user->hasAccess('Buat Mata Kuliah'),
+                'canUpdate' => $user->hasAccess('Ubah Mata Kuliah'),
+                'canDelete' => $user->hasAccess('Hapus Mata Kuliah'),
+                'tabAktif' => 'Favorit',
+                'isMahasiswa' => true,
+            ]);
         }
         return Inertia::render('mata-kuliah/index', [
             'mataKuliahs' => MataKuliah::with('dosen')->orderByDesc('created_at')->get(),
@@ -40,6 +59,8 @@ class MataKuliahController extends Controller
             'canCreate' => $user->hasAccess('Buat Mata Kuliah'),
             'canUpdate' => $user->hasAccess('Ubah Mata Kuliah'),
             'canDelete' => $user->hasAccess('Hapus Mata Kuliah'),
+            'tabAktif' => 'Semua',
+            'isMahasiswa' => $user->role === 'mahasiswa' ? true : false,
         ]);
     }
 
@@ -247,5 +268,22 @@ class MataKuliahController extends Controller
             'status' => $request->status
         ]);
         return redirect()->route("{$user->role}.mata-kuliah.index")->with('success', "Status mata kuliah {$mataKuliah->nama} berhasil diperbarui.");
+    }
+
+    public function updateFavorite(Request $request, string $id)
+    {
+        $user = User::find(auth('web')->user()->id);
+        if (!$user->hasAccess('Lihat Mata Kuliah')) {
+            return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk melihat data mata kuliah.']);
+        }
+        $mataKuliah = MataKuliah::findOrFail($id);
+        if ($request->tabAktif === 'Favorit') {
+            $mataKuliah->mahasiswas()->detach($user->mahasiswa_id);
+            session()->flash('success', "Mata kuliah {$mataKuliah->nama} berhasil dihapus dari favorit.");
+        } else {
+            $mataKuliah->mahasiswas()->attach($user->mahasiswa_id);
+            session()->flash('success', "Mata kuliah {$mataKuliah->nama} berhasil ditambahkan ke favorit.");
+        }
+        return redirect()->route("{$user->role}.mata-kuliah.index");
     }
 }

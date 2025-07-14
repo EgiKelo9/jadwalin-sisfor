@@ -72,6 +72,7 @@ export interface ActionConfig {
   actionButtonKey?: string
   actionButtonVariant?: string
   actionButtonValues?: any | any[]
+  actionButtonCanLoop?: boolean // If true, will loop through actionButtonValues
   actionButtonPath?: string // Route for action button
   multipleButtonKeys?: string[] // Key to identify multiple action button
   multipleButtonLabels?: string[] // Label for multiple action button
@@ -380,9 +381,13 @@ export function createTableColumns<T extends BaseEntity>(
 
           let nextIndex = (currentIndex + 1);
           if (nextIndex >= actionConfig.actionButtonValues.length) {
-            console.error(`No next value found for "${currentValue}"`);
-            nextIndex -= 1;
-            return;
+            if (!actionConfig.actionButtonCanLoop) {
+              // If looping is not allowed, stop at the last value
+              console.warn(`Reached the end of action values for "${currentValue}" without looping`);
+              nextIndex -= 1;
+              return;
+            }
+            nextIndex %= actionConfig.actionButtonValues.length; // Loop back to the start if allowed
           }
           const nextValue = actionConfig.actionButtonValues[nextIndex];
 
@@ -438,16 +443,6 @@ export function createTableColumns<T extends BaseEntity>(
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  {actionConfig.showActionButton !== false && (
-                    <DropdownMenuItem
-                      onClick={handleAction}
-                      variant="default"
-                    >
-                      <Check className="h-4 w-4 mr-1" />
-                      {actionConfig.actionButtonLabel || 'Aksi'}
-                    </DropdownMenuItem>
-                  )}
-                  {(actionConfig.showActionButton && (actionConfig.showMultipleButtons || actionConfig.showSwitch || actionConfig.showEdit || actionConfig.showDelete)) && <DropdownMenuSeparator />}
                   <div className="flex flex-col items-start">
                     {(actionConfig.showMultipleButtons && actionConfig.multipleButtonKeys && actionConfig.multipleButtonKeys.length > 0) && (
                       actionConfig.multipleButtonKeys.map((key, index) => {
@@ -480,7 +475,7 @@ export function createTableColumns<T extends BaseEntity>(
                       }).filter(Boolean)
                     )}
                   </div>
-                  {(actionConfig.showMultipleButtons && (actionConfig.showSwitch || actionConfig.showEdit || actionConfig.showDelete)) && <DropdownMenuSeparator />}
+                  {(actionConfig.showMultipleButtons && (actionConfig.showSwitch || actionConfig.showActionButton || actionConfig.showEdit || actionConfig.showDelete)) && <DropdownMenuSeparator />}
                   {actionConfig.showSwitch !== false && (
                     <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                       <Switch
@@ -495,7 +490,17 @@ export function createTableColumns<T extends BaseEntity>(
                       {actionConfig.switchLabel || 'Status'}
                     </DropdownMenuItem>
                   )}
-                  {(actionConfig.showSwitch && (actionConfig.showEdit || actionConfig.showDelete)) && <DropdownMenuSeparator />}
+                  {(actionConfig.showSwitch && (actionConfig.showActionButton || actionConfig.showEdit || actionConfig.showDelete)) && <DropdownMenuSeparator />}
+                  {actionConfig.showActionButton !== false && (
+                    <DropdownMenuItem
+                      onClick={handleAction}
+                      variant="default"
+                    >
+                      <Check className="h-4 w-4 mr-1" />
+                      {actionConfig.actionButtonLabel || 'Aksi'}
+                    </DropdownMenuItem>
+                  )}
+                  {(actionConfig.showActionButton && (actionConfig.showEdit || actionConfig.showDelete)) && <DropdownMenuSeparator />}
                   {actionConfig.showEdit !== false && (
                     <DropdownMenuItem onClick={handleEdit}>
                       <Pencil className="h-4 w-4 mr-1" />

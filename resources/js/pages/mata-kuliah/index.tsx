@@ -29,9 +29,11 @@ interface MataKuliahTableProps {
     canCreate?: boolean;
     canUpdate?: boolean;
     canDelete?: boolean;
+    tabAktif?: string;
+    isMahasiswa?: boolean;
 }
 
-export default function MataKuliah({ mataKuliahs, userRole, canCreate, canUpdate, canDelete }: MataKuliahTableProps) {
+export default function MataKuliah({ mataKuliahs, userRole, canCreate, canUpdate, canDelete, tabAktif, isMahasiswa }: MataKuliahTableProps) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: userRole.charAt(0).toUpperCase() + userRole.slice(1),
@@ -44,7 +46,7 @@ export default function MataKuliah({ mataKuliahs, userRole, canCreate, canUpdate
     ];
 
     // Create columns with permissions
-    const columns = createMataKuliahColumns(userRole, canUpdate, canDelete);
+    const columns = createMataKuliahColumns(userRole, canUpdate, canDelete, tabAktif);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs} userRole={userRole}>
@@ -60,6 +62,9 @@ export default function MataKuliah({ mataKuliahs, userRole, canCreate, canUpdate
                     showColumnFilter={true}
                     showDataFilter={true}
                     columnFilters={columnFiltersConfig}
+                    showActiveTab={isMahasiswa ?? false}
+                    activeTab={['Semua', 'Favorit']}
+                    defaultTab="Semua"
                 />
             </div>
         </AppLayout>

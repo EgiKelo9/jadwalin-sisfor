@@ -84,16 +84,29 @@ class PerubahanJadwalController extends Controller
         $ruangKelas = RuangKelas::where('status', 'layak')->orderBy('nama')->get();
 
         // Get jadwal sementara with all necessary relationships
-        $jadwalSementaras = JadwalSementara::with([
-            'jadwal.mataKuliah.dosen',
-            'jadwal.ruangKelas',
-            'ruangKelas'
-        ])
+        if ($user->dosen && $user->dosen_id !== null) {
+            $jadwalSementaras = JadwalSementara::with([
+                'jadwal.mataKuliah.dosen',
+                'jadwal.ruangKelas',
+                'ruangKelas'
+            ])
+            ->whereHas('jadwal.mataKuliah', function ($query) use ($user) {
+                $query->where('dosen_id', $user->dosen->id);
+            })
+            ->orderBy('tanggal')
+            ->get();
+        } else {
+            $jadwalSementaras = JadwalSementara::with([
+                'jadwal.mataKuliah.dosen',
+                'jadwal.ruangKelas',
+                'ruangKelas'
+            ])
             ->whereHas('jadwal.mataKuliah', function ($query) {
                 $query->where('status', 'aktif');
             })
             ->orderBy('tanggal')
             ->get();
+        }
 
         return Inertia::render('ajukan-perubahan-jadwal/create', [
             'ruangKelas' => $ruangKelas,
@@ -359,9 +372,10 @@ class PerubahanJadwalController extends Controller
                 $jadwal = $perubahanJadwal->jadwalSementara();
                 $jadwal->update([
                     'tanggal' => $perubahanJadwal->tanggal_perubahan,
+                    'lokasi' => $perubahanJadwal->lokasi,
                     'jam_mulai' => $perubahanJadwal->jam_mulai_baru,
                     'jam_selesai' => $perubahanJadwal->jam_selesai_baru,
-                    'ruang_kelas_id' => $perubahanJadwal->ruang_kelas_id,
+                    'ruang_kelas_id' => $perubahanJadwal->lokasi === 'offline' ? $perubahanJadwal->ruang_kelas_id : null,
                 ]);
             }
 

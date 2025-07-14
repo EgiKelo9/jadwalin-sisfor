@@ -20,28 +20,28 @@ export default function Dashboard({ userRole, jadwal }: { userRole: string, jadw
   ];
 
 
-const handleDateChange = (date: number) => {
-  setSelectedDate(date);
+  const handleDateChange = (date: number) => {
+    setSelectedDate(date);
 
-  const [monthName, yearStr] = selectedMonthYear.split(" ");
-  const months = [
-    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-    "Juli", "Agustus", "September", "Oktober", "November", "Desember",
-  ];
-  const monthIndex = months.findIndex((m) => m === monthName) + 1;
+    const [monthName, yearStr] = selectedMonthYear.split(" ");
+    const months = [
+      "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+      "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+    ];
+    const monthIndex = months.findIndex((m) => m === monthName) + 1;
 
-  const formattedDate = `${yearStr}-${String(monthIndex).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
-  console.log(formattedDate)
+    const formattedDate = `${yearStr}-${String(monthIndex).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
+    console.log(formattedDate)
 
-  router.get(
-    window.location.pathname,
-    { date: formattedDate },
-    {
-      preserveState: true,
-      preserveScroll: true,
-    }
-  );
-};
+    router.get(
+      window.location.pathname,
+      { date: formattedDate },
+      {
+        preserveState: true,
+        preserveScroll: true,
+      }
+    );
+  };
 
 
   const today = new Date();
@@ -49,13 +49,13 @@ const handleDateChange = (date: number) => {
   const [selectedMonthYear, setSelectedMonthYear] = useState(
     `${today.toLocaleString("id-ID", { month: "long" })} ${today.getFullYear()}`
   );
-  
+
 
   return (
     <AppLayout breadcrumbs={breadcrumbs} userRole={userRole}>
       <Head title="Beranda" />
       <div className="flex w-full h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
-        <div className="grid w-full gap-4 md:grid-cols-[3fr_1fr]">
+        {/* <div className="grid w-full gap-4 md:grid-cols-[3fr_1fr]">
           <div>
             <Schedule
               jadwal={jadwal}
@@ -72,6 +72,15 @@ const handleDateChange = (date: number) => {
               setSelectedDate={handleDateChange}
             />
           </div>
+        </div> */}
+        <div>
+          <Schedule
+            jadwal={jadwal}
+            selectedDate={selectedDate}
+            selectedMonthYear={selectedMonthYear}
+            setSelectedDate={handleDateChange}
+            setSelectedMonthYear={setSelectedMonthYear}
+          />
         </div>
       </div>
     </AppLayout>

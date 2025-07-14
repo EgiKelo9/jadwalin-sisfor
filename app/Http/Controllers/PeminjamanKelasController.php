@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JadwalSementara;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\RuangKelas;
@@ -29,7 +30,6 @@ class PeminjamanKelasController extends Controller
      */
     public function index()
     {
-        // dd("test");
         $user = User::find(auth('web')->user()->id);
         if (!$user->hasAccess('Lihat Peminjaman Kelas')) {
             return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk melihat peminjaman kelas.']);
@@ -120,7 +120,11 @@ class PeminjamanKelasController extends Controller
             ->where('status', 'diterima')
             ->orderByDesc('created_at')
             ->get();
+        $jadwals = JadwalSementara::with(['jadwal', 'jadwal.mataKuliah', 'jadwal.ruangKelas', 'ruangKelas'])
+            ->orderByDesc('created_at')
+            ->get();
         return Inertia::render('peminjaman-kelas/create', [
+            'jadwals' => $jadwals,
             'ruangKelas' => $ruangKelas,
             'peminjamanKelas' => $peminjamanKelas,
             'userRole' => $user->role,
