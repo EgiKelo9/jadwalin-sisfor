@@ -45,23 +45,22 @@ export default function Schedule({
   const totalHeight = (BASE_END_MIN - BASE_START_MIN) * PIXELS_PER_MIN;
 
   const colors = [
-    "bg-blue-200",
-    "bg-green-200",
-    "bg-yellow-200",
-    "bg-purple-200",
-    "bg-pink-200",
-    "bg-indigo-200",
-    "bg-emerald-200",
+    "bg-primary/30",
+    "bg-secondary/30",
+    "bg-accent/30",
+    "bg-muted/30",
+    "bg-card/30",
+    "bg-destructive/30",
+    "bg-ring/30",
   ];
 
   return (
-    <div className="bg-white rounded-lg p-4 w-full border relative">
-      {/* Dropdown Bulan & Tahun */}
+    <div className="bg-card text-card-foreground rounded-lg p-4 w-full border border-border relative">
       <div className="flex items-center gap-4 mb-4">
         <select
           value={selectedPeriod}
           onChange={(e) => setSelectedMonthYear(e.target.value)}
-          className="border rounded px-2 py-1 text-sm"
+          className="border border-input rounded px-2 py-1 text-sm bg-background text-foreground"
         >
           {periods.map((period) => (
             <option key={period} value={period}>
@@ -86,10 +85,10 @@ export default function Schedule({
             return (
               <div
                 key={date}
-                className={`flex flex-col items-center justify-center cursor-pointer px-3 py-2 rounded min-w-[50px] ${
-                  isActive
-                    ? "bg-teal-500 text-white font-medium"
-                    : `hover:bg-gray-100 text-gray-700 ${isWeekend ? "text-red-500" : ""}`
+                className={`flex flex-col items-center justify-center cursor-pointer px-3 py-2 rounded min-w-[50px] transition-colors
+                  ${isActive
+                    ? "bg-primary text-primary-foreground font-medium"
+                    : `hover:bg-muted hover:text-muted-foreground text-gray-700 ${isWeekend ? "text-red-500" : ""}`
                 }`}
                 onClick={() => setSelectedDate(date)}
               >
@@ -101,10 +100,7 @@ export default function Schedule({
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-
-      {/* Grid waktu */}
       <div className="flex w-full overflow-auto relative">
-        {/* Sidebar jam */}
         <div className="relative w-[80px] flex-shrink-0">
           {Array.from({
             length: (BASE_END_MIN - BASE_START_MIN) / 60 + 1,
@@ -114,21 +110,19 @@ export default function Schedule({
             return (
               <div
                 key={hour}
-                className="absolute text-xs text-gray-500"
+                className="absolute text-xs text-muted-foreground"
                 style={{
                   top: `${top}px`,
                   height: `${60 * PIXELS_PER_MIN}px`,
                 }}
               >
-                <div className="flex items-start h-full border-t border-gray-200 pt-1">
+                <div className="flex items-start h-full border-t border-border pt-1">
                   {hour}:00
                 </div>
               </div>
             );
           })}
         </div>
-
-        {/* Konten jadwal */}
         <div
           className="relative flex-1"
           style={{ height: `${totalHeight}px`, minWidth: "400px" }}
@@ -140,12 +134,11 @@ export default function Schedule({
             return (
               <div
                 key={i}
-                className="absolute left-0 w-full border-t border-dashed border-gray-200"
+                className="absolute left-0 w-full border-t border-dashed border-border"
                 style={{ top: `${top}px` }}
               />
             );
           })}
-
           {jadwal && jadwal.length > 0 ? (
             jadwal.map((item, idx) => {
               const startMin = parseTimeToMinutes(item.jam_mulai);
@@ -170,7 +163,7 @@ export default function Schedule({
               return (
                 <div
                   key={idx}
-                  className={`absolute rounded-lg shadow-md p-2 text-sm ${colorClass}`}
+                  className={`absolute rounded-lg shadow-md p-2 text-sm ${colorClass} border border-border`}
                   style={{
                     top: `${top}px`,
                     left: `${leftOffsetPx}px`,
@@ -193,7 +186,7 @@ export default function Schedule({
               );
             })
           ) : (
-            <div className="text-gray-500 text-sm absolute top-4 left-4">
+            <div className="text-muted-foreground text-sm absolute top-4 left-4">
               Tidak ada jadwal untuk hari ini.
             </div>
           )}

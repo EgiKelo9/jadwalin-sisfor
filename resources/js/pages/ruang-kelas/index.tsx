@@ -3,6 +3,8 @@ import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import { createRuangKelasColumns } from './column';
 import { DataTable, ColumnFilterConfig } from '@/components/ui/data-table';
+import { exportGenericDataToPDF } from '@/utils/pdf-export';
+import { ColumnFiltersState } from "@tanstack/react-table";
 
 export const columnFiltersConfig: ColumnFilterConfig[] = [
     {
@@ -46,6 +48,45 @@ export default function RuangKelas({ ruangKelas, userRole, canCreate, canUpdate,
     // Create columns with permissions
     const columns = createRuangKelasColumns(userRole, canUpdate, canDelete);
 
+    const ruangKelasPdfExportHandler = (
+        data: any[],
+        columnFilters?: ColumnFiltersState,
+        globalFilter?: string
+        ) => {
+        const numberedData = data.map((item, idx) => ({ no: idx + 1, ...item }));
+
+        // Rakit keterangan filter aktif
+        let filterDescription = '';
+        if (globalFilter) {
+            filterDescription += `Pencarian: "${globalFilter}"`;
+        }
+        if (columnFilters && columnFilters.length > 0) {
+            const filterTexts = columnFilters.map(f => `${f.id}: ${String(f.value)}`);
+            filterDescription += (filterDescription ? " | " : "") + filterTexts.join(", ");
+        }
+
+        exportGenericDataToPDF({
+            title: "Daftar Ruang Kelas",
+            fileName: `Daftar Ruang Kelas-${new Date().toISOString().split("T")[0]}.pdf`,
+            data: numberedData,
+            columns: [
+                { header: "No", dataKey: "no", width: 15 },
+                { header: "Nama", dataKey: "nama", width: 45 },
+                { header: "Gedung", dataKey: "gedung", width: 45 },
+                { header: "Lantai", dataKey: "lantai", width: 25 },
+                { header: "Kapasitas", dataKey: "kapasitas", width: 25 },
+                { header: "Status", dataKey: "status", width: 25 },
+            ],
+            orientation: "portrait",
+            headerInfo: {
+            printDate: undefined,
+            filterDescription, // kita simpan keterangan filter di sini
+            },
+            // headerImage: logoHeader,
+            // footerImage: logoFooter,
+        });
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs} userRole={userRole}>
             <Head title="Ruang Kelas" />
@@ -59,6 +100,8 @@ export default function RuangKelas({ ruangKelas, userRole, canCreate, canUpdate,
                     showCreateButton={canCreate}
                     showColumnFilter={true}
                     showDataFilter={true}
+                    showPdfExport={true}
+                    pdfExportHandler={ruangKelasPdfExportHandler}
                     columnFilters={columnFiltersConfig}
                 />
             </div>

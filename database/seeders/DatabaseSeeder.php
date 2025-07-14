@@ -27,7 +27,15 @@ class DatabaseSeeder extends Seeder
         Dosen::factory(10)->withAccount()->create();
         Admin::factory(3)->withAccount()->create();
         RuangKelas::factory(20)->create();
-        MataKuliah::factory(80)->withSchedule()->create();
+        
+        for ($i = 0; $i < 20; $i++) {
+            MataKuliah::factory()->withClasses(6);
+        }
+        MataKuliah::factory(8)->obscure()->create();
+        MataKuliah::where('status', 'aktif')->each(function ($mataKuliah) {
+            Jadwal::factory(rand(1, 2))->create(['mata_kuliah_id' => $mataKuliah->id]);
+        });
+        
         PeminjamanKelas::factory(20)->create();
         PerubahanJadwal::factory(20)->create();
         // PerubahanJadwalSementara::factory(20)->create();

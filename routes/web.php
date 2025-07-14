@@ -61,6 +61,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::put('daftar-jadwal/ajukan-perubahan-daftar/{ajukan_perubahan_daftar}/status', [PerubahanDaftarJadwalController::class, 'updateStatus'])
                 ->name('ajukan-perubahan-daftar.updateStatus');
             Route::resource('daftar-jadwal', DaftarJadwalController::class);
+            Route::post('daftar-jadwal/generate', [DaftarJadwalController::class, 'generateSchedule'])
+                ->name('daftar-jadwal.generate');
             Route::put('daftar-jadwal/{daftar_jadwal}/status', [DaftarJadwalController::class, 'updateStatus'])
                 ->name('daftar-jadwal.updateStatus');
             Route::resource('jadwal-perkuliahan/ajukan-perubahan-jadwal', PerubahanJadwalController::class);

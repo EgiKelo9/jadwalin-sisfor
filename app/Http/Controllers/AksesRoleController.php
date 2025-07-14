@@ -29,6 +29,12 @@ class AksesRoleController extends Controller
      */
     public function index(Request $request)
     {
+        // return Inertia::render('dashboard/Dashboard');
+            // return Inertia::render('beranda', [
+            //     'user' => $admin,
+            //     'userRole' => 'admin',
+            // ]);
+
         $user = User::find(auth('web')->user()->id);
         if (!$user->hasAccess('Lihat Peran dan Akses')) {
             return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk melihat peran dan akses.']);
